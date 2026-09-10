@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { summarizeBatchResults } from '../js/celebration.js';
-import { presetKeyForState, segmentsFromLabels, PRESETS } from '../js/wheel-tab.js';
+import { committedWheelWeight, presetKeyForState, segmentsFromLabels, PRESETS } from '../js/wheel-tab.js';
 import {
   BATCH_SPIN_MAX_DURATION_MS,
   BATCH_SPIN_MIN_DURATION_MS,
@@ -45,6 +45,16 @@ test('preset selection is derived from the complete wheel state', () => {
   assert.equal(presetKeyForState(yesNo.map((segment, index) => index ? segment : { ...segment, label: 'Absolutely' }), 5, false), '');
   assert.equal(presetKeyForState(yesNo.map((segment, index) => index ? segment : { ...segment, color: '#ffffff' }), 5, false), '');
   assert.equal(presetKeyForState(yesNo.map((segment, index) => index ? segment : { ...segment, weight: 2 }), 5, false), '');
+});
+
+test('wheel weights validate only when committed', () => {
+  assert.equal(committedWheelWeight('2'), 2);
+  assert.equal(committedWheelWeight('12'), 12);
+  assert.equal(committedWheelWeight(''), 1);
+  assert.equal(committedWheelWeight('0'), 1);
+  assert.equal(committedWheelWeight('-3'), 1);
+  assert.equal(committedWheelWeight('2.5'), 1);
+  assert.equal(committedWheelWeight('not a number'), 1);
 });
 
 test('mini-wheel grids adapt rows and columns without stretching cells', () => {

@@ -9,7 +9,7 @@ A fluid, static "yes/no wheel" — replicating [pickerwheel.com](https://pickerw
 - Fresh sessions open with a Yes/No wheel displayed as five repeated input sets (ten visual slices).
 - Choose one to five input sets to repeat a short option list without changing its underlying odds.
 - Add and remove options, edit labels, and choose colors with compact field labels for clarity.
-- Keep equal odds by default, or reveal optional integer weights with a persistent Weighted toggle.
+- Keep equal odds by default, or reveal optional integer weights with a persistent Weighted toggle; weight fields allow free mobile editing and validate only when focus leaves, reverting invalid drafts to `1`.
 - Load Yes/No, Yes/No/Maybe, Heads/Tails, Rock/Paper/Scissors, meal, and player-order presets.
 - Keep the preset selector synchronized with the persisted wheel: exact built-in configurations show their preset name, while any option, color, weight, input-set, or weighting customization shows **Select**, including after reload.
 - Presets automatically choose a useful input-set count for a lively wheel composition.

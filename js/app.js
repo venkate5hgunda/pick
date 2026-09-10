@@ -3,7 +3,7 @@ import { loadJSON, KEYS } from './storage.js';
 import { MotionAudio } from './audio.js?v=2';
 import { initModalDismissal } from './modal.js';
 import { initPrimaryTabs, initSoundControl } from './ui-controller.js';
-import { initWheelTab } from './wheel-tab.js?v=9';
+import { initWheelTab } from './wheel-tab.js?v=10';
 import { initDiceTab } from './dice-tab.js?v=5';
 import { initVerseModal } from './verse-modal.js';
 import { initTooltips } from './tooltip.js';

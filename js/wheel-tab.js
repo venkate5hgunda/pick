@@ -43,6 +43,11 @@ export function presetKeyForState(segments, inputSetCount, weightsEnabled) {
   })?.[0] || '';
 }
 
+export function committedWheelWeight(value, fallback = 1) {
+  const parsed = Number(value);
+  return Number.isInteger(parsed) && parsed >= 1 ? parsed : fallback;
+}
+
 export function initWheelTab(motionAudio) {
   const canvas = document.getElementById('wheelCanvas');
   const spinSurface = document.getElementById('wheelSpinSurface');
@@ -160,8 +165,8 @@ export function initWheelTab(motionAudio) {
         refreshWheel();
         syncPresetSelect();
       });
-      weightInput.addEventListener('input', () => {
-        segment.weight = Math.max(1, parseInt(weightInput.value, 10) || 1);
+      weightInput.addEventListener('blur', () => {
+        segment.weight = committedWheelWeight(weightInput.value);
         weightInput.value = String(segment.weight);
         persistSegments();
         refreshWheel();

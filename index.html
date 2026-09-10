@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Pick! — Decision Wheel, Dice &amp; Odds</title>
+<meta name="description" content="An interactive yes/no decision wheel, statistical batch simulation, and a dice roller with a dedicated Catan mode.">
+<meta name="theme-color" content="#3b82f6">
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <header class="app-header">
+    <div class="brand">
+      <img src="assets/logo.svg" class="brand-icon" alt="" width="36" height="36">
+      <img src="assets/wordmark.svg" class="brand-word" alt="Pick!">
+    </div>
+    <div class="header-actions">
+      <button id="soundToggle" class="icon-btn" aria-label="Mute sounds" data-tooltip="Mute sounds" type="button">
+        <svg class="icon sound-on-icon" aria-hidden="true"><use href="#icon-volume"></use></svg>
+        <svg class="icon sound-off-icon" aria-hidden="true"><use href="#icon-volume-off"></use></svg>
+      </button>
+      <button id="themeToggle" class="icon-btn theme-toggle" aria-label="Use dark theme" data-tooltip="Use dark theme" type="button">
+        <svg class="icon sun-icon" aria-hidden="true"><use href="#icon-sun"></use></svg>
+        <svg class="icon moon-icon" aria-hidden="true"><use href="#icon-moon"></use></svg>
+      </button>
+    </div>
+  </header>
+
+  <nav class="tabs" role="tablist" aria-label="Modes">
+    <button class="tab-btn is-active" data-tab="wheel" role="tab" aria-selected="true" type="button">Wheel</button>
+    <button class="tab-btn" data-tab="dice" role="tab" aria-selected="false" type="button">Dice</button>
+  </nav>
+
+  <main>
+    <section id="tab-wheel" class="tab-panel" role="tabpanel">
+      <div class="wheel-layout">
+        <div class="wheel-stage" id="wheelStage">
+          <div id="wheelPointer" class="pointer" aria-hidden="true">
+            <img src="assets/spin-wordmark.svg" alt="">
+          </div>
+          <div id="batchStatus" class="batch-status" role="status" hidden></div>
+          <button id="wheelSpinSurface" class="wheel-spin-surface" type="button" aria-label="Spin the wheel" data-tooltip="Click to spin">
+            <canvas id="wheelCanvas" class="wheel-canvas" aria-hidden="true"></canvas>
+          </button>
+          <div id="miniWheelGrid" class="mini-wheel-grid" hidden></div>
+          <div id="wheelConfetti" class="wheel-confetti" aria-hidden="true"></div>
+          <div id="wheelResultOverlay" class="wheel-result-overlay" role="status" aria-live="assertive" aria-atomic="true" hidden>
+            <span>Selected</span>
+            <strong data-result-label></strong>
+            <button id="spinAgainBtn" class="btn btn-primary result-spin-again" type="button">Spin again</button>
+            <button class="result-dismiss" type="button" data-result-dismiss aria-label="Dismiss result" data-tooltip="Dismiss result">&times;</button>
+          </div>
+          <div id="batchResultOverlay" class="wheel-result-overlay batch-result-overlay" role="status" aria-live="assertive" aria-atomic="true" hidden>
+            <span data-batch-eyebrow>Batch complete</span>
+            <strong data-batch-heading></strong>
+            <div class="batch-result-stats" data-batch-stats aria-label="Batch result statistics"></div>
+            <button class="result-dismiss" type="button" data-result-dismiss aria-label="Dismiss batch results" data-tooltip="Dismiss batch results">&times;</button>
+          </div>
+        </div>
+
+        <div class="wheel-controls">
+          <div class="segment-editor" id="segmentEditor" aria-label="Wheel options"></div>
+          <div class="editor-actions">
+            <button id="addSegmentBtn" class="btn btn-secondary" type="button">+ Add option</button>
+            <label class="weight-toggle">
+              <input id="weightToggle" type="checkbox">
+              <span class="toggle-track" aria-hidden="true"></span>
+              Weighted
+            </label>
+            <label class="field field-inline input-sets-field">
+              Input sets
+              <select id="inputSetCount" aria-label="Number of repeated input sets">
+                <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option>
+              </select>
+            </label>
+            <label class="field field-inline">
+              Preset
+              <select id="presetSelect">
+                <option value="">Select</option>
+                <option value="yesno">Yes / No</option>
+                <option value="yesnomaybe">Yes / No / Maybe</option>
+                <option value="headstails">Heads / Tails</option>
+                <option value="rps">Rock / Paper / Scissors</option>
+                <option value="mealtime">What to eat?</option>
+                <option value="whogoesfirst">Who goes first?</option>
+              </select>
+            </label>
+          </div>
+
+          <button id="spinBtn" class="btn btn-primary btn-large" type="button">SPIN</button>
+          <div id="wheelResult" class="result" aria-live="polite"></div>
+
+          <details class="batch-controls">
+            <summary>More Options</summary>
+            <div class="batch-controls-content">
+            <h3>Statistical Mode</h3>
+            <div class="batch-row">
+              <label class="field">
+                Animated batch (2–12)
+                <input type="number" id="animatedBatchCount" min="2" max="12" value="8">
+              </label>
+              <button id="runAnimatedBatch" class="btn btn-secondary" type="button">Run animated</button>
+            </div>
+            <div class="batch-row">
+              <label class="field">
+                Instant batch
+                <input type="number" id="fastBatchCount" min="13" max="10000" value="200">
+              </label>
+              <button id="runFastBatch" class="btn btn-secondary" type="button">Run instant</button>
+            </div>
+            <button id="backToWheel" class="btn btn-ghost" type="button" hidden>← Back to wheel</button>
+            </div>
+          </details>
+        </div>
+      </div>
+
+      <div class="stats-panel">
+        <div class="stats-header">
+          <h3>Distribution</h3>
+          <div class="stats-actions">
+            <button id="wheelStatsReset" class="btn btn-ghost" type="button">Reset</button>
+            <button id="wheelStatsExport" class="btn btn-ghost" type="button">Export CSV</button>
+          </div>
+        </div>
+        <canvas id="wheelHistogram" class="histogram-canvas" title="Observed wheel result distribution"></canvas>
+        <div id="wheelStatsTable" class="stats-table" role="region" aria-label="Wheel distribution details"></div>
+      </div>
+    </section>
+
+    <section id="tab-dice" class="tab-panel" role="tabpanel" hidden>
+      <div class="dice-mode-nav">
+        <span class="dice-mode-label">Dice mode</span>
+        <div class="dice-mode-switch" role="tablist" aria-label="Dice modes">
+          <button class="mode-btn is-active" data-mode="standard" type="button">Standard</button>
+          <button class="mode-btn" data-mode="catan" type="button">Catan</button>
+        </div>
+      </div>
+
+      <div id="dicePanel-standard" class="dice-panel">
+        <div class="dice-controls">
+          <label class="field">Count
+            <input type="number" id="diceCount" min="1" max="10" value="2">
+          </label>
+          <label class="field"><span>Modifier <small class="field-hint">added to total</small></span>
+            <input type="number" id="diceModifier" value="0">
+          </label>
+          <button id="rollDiceBtn" class="btn btn-primary" type="button">Roll</button>
+        </div>
+        <div id="diceResult" class="dice-result" aria-live="polite"></div>
+        <div class="stats-panel">
+          <div class="stats-header">
+            <h3>Totals distribution</h3>
+            <button id="diceStatsReset" class="btn btn-ghost" type="button">Reset</button>
+          </div>
+          <canvas id="diceHistogram" class="histogram-canvas" title="Distribution of rolled totals"></canvas>
+        </div>
+      </div>
+
+      <div id="dicePanel-catan" class="dice-panel" hidden>
+        <div id="catanSetup" class="catan-setup">
+          <label class="field">Players
+            <select id="catanPlayerCount">
+              <option>2</option><option>3</option><option>4</option><option selected>5</option><option>6</option>
+            </select>
+          </label>
+          <div id="catanNameInputs" class="catan-name-inputs"></div>
+          <label class="weight-toggle" title="Gives each die a different subtle, randomized face bias for this game">
+            <input id="catanUnfairDice" type="checkbox">
+            <span class="toggle-track" aria-hidden="true"></span>
+            Slightly loaded dice
+          </label>
+          <button id="catanStartBtn" class="btn btn-primary" type="button">Start game</button>
+        </div>
+
+        <div id="catanGame" class="catan-game" hidden>
+          <div class="catan-turn">Current turn: <strong id="catanCurrentPlayer"></strong></div>
+          <button id="catanRollBtn" class="btn btn-primary btn-large" type="button">Roll</button>
+          <div id="catanRollDisplay" class="dice-result" aria-live="polite"></div>
+
+          <h4>Recent rolls</h4>
+          <ul id="catanShortLog" class="catan-short-log"></ul>
+          <div class="catan-game-actions">
+            <button id="catanExpandBtn" class="btn btn-ghost" type="button">Expand analytics ▸</button>
+            <button id="catanNewGameBtn" class="btn btn-ghost" type="button">New game</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="app-footer">
+    <span>Made with <button id="easterEggBtn" class="footer-heart" type="button" aria-label="Open a Bible verse" data-tooltip="Open a Bible verse">♥</button> by Venkatesh</span>
+  </footer>
+
+  <div id="verseModal" class="modal" hidden>
+    <div class="modal-content verse-modal-content">
+      <div class="verse-modal-header">
+        <div>
+          <span class="eyebrow">A quiet moment</span>
+          <h2>A verse for right now</h2>
+        </div>
+        <button id="verseClose" class="icon-btn modal-close" type="button" aria-label="Close" data-tooltip="Close" data-close-modal>
+          <svg class="icon" aria-hidden="true"><use href="#icon-x"></use></svg>
+        </button>
+      </div>
+      <label class="field verse-version-field">
+        Bible version
+        <select id="verseVersion" aria-label="Bible version"></select>
+      </label>
+      <blockquote class="verse-card">
+        <p id="verseText" class="verse-text"></p>
+        <footer>
+          <span id="verseRef" class="verse-ref"></span>
+          <span id="verseTranslation" class="verse-translation"></span>
+        </footer>
+      </blockquote>
+      <div class="verse-actions">
+        <button id="verseAnother" class="btn btn-primary" type="button">Another verse</button>
+        <button id="verseDismiss" class="btn btn-ghost" type="button" data-close-modal>Done</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="catanAnalyticsModal" class="modal" hidden>
+    <div class="modal-content modal-content-wide">
+      <div class="modal-header">
+        <h2>Catan Analytics</h2>
+        <button id="catanAnalyticsClose" class="icon-btn modal-close" type="button" aria-label="Close analytics" data-tooltip="Close analytics" data-close-modal>
+          <svg class="icon" aria-hidden="true"><use href="#icon-x"></use></svg>
+        </button>
+      </div>
+      <div id="catanPlayerStats" class="catan-player-stats"></div>
+      <h3>Roll histogram</h3>
+      <p id="catanHistogramGate" class="muted"></p>
+      <canvas id="catanHistogramCanvas" class="histogram-canvas" title="Catan totals compared with theoretical odds" hidden></canvas>
+      <h3>Full log</h3>
+      <div id="catanFullLog" class="catan-full-log"></div>
+    </div>
+  </div>
+
+  <svg class="icon-sprite" aria-hidden="true">
+    <symbol id="icon-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.66 6.34l1.41-1.41"/></symbol>
+    <symbol id="icon-moon" viewBox="0 0 24 24"><path d="M20.7 16.4A9 9 0 1 1 7.6 3.3a7 7 0 0 0 13.1 13.1Z"/></symbol>
+    <symbol id="icon-volume" viewBox="0 0 24 24"><path d="M11 5 6 9H2v6h4l5 4ZM15.5 8.5a5 5 0 0 1 0 7M18 6a8.5 8.5 0 0 1 0 12"/></symbol>
+    <symbol id="icon-volume-off" viewBox="0 0 24 24"><path d="m11 5-5 4H2v6h4l5 4ZM22 9l-6 6M16 9l6 6"/></symbol>
+    <symbol id="icon-x" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+  </svg>
+
+  <script type="module" src="js/app.js?v=15"></script>
+</body>
+</html>

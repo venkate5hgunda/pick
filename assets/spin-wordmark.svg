@@ -1,0 +1,22 @@
+<svg viewBox="0 0 230 80" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Spin!">
+  <defs>
+    <filter id="lift" x="-15%" y="-20%" width="140%" height="155%">
+      <feDropShadow dx="0" dy="3" stdDeviation="0" flood-color="#080b12"/>
+    </filter>
+    <linearGradient id="red" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#ff8178"/><stop offset="1" stop-color="#ff514b"/></linearGradient>
+    <linearGradient id="yellow" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#ffe06a"/><stop offset="1" stop-color="#ffb927"/></linearGradient>
+    <linearGradient id="green" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#64e3ad"/><stop offset="1" stop-color="#20b97c"/></linearGradient>
+    <linearGradient id="blue" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#78c2ff"/><stop offset="1" stop-color="#3d8cf0"/></linearGradient>
+  </defs>
+  <g filter="url(#lift)" stroke="#080b12" stroke-width="4" stroke-linejoin="round">
+    <path transform="rotate(-2 31 39)" fill="url(#red)" d="M12 19Q15 5 35 5Q50 5 57 14L45 26Q39 19 31 19Q25 19 25 23Q25 27 37 29Q56 32 56 47Q56 64 34 69Q14 70 5 58L17 46Q25 56 34 55Q42 54 42 49Q42 45 29 44Q8 41 12 19Z"/>
+    <path transform="rotate(2 87 38)" fill="url(#yellow)" fill-rule="evenodd" d="M64 68V8H89Q112 8 112 29Q112 50 89 51H81V68ZM81 23V37H89Q96 37 96 30Q96 23 89 23Z"/>
+    <path transform="rotate(-1 128 38)" fill="url(#green)" d="M119 8H137V68H119Z"/>
+    <path transform="rotate(2 172 38)" fill="url(#blue)" d="M145 68V8H161L181 38V8H198V68H182L162 39V68Z"/>
+    <path transform="rotate(-3 215 34)" fill="url(#red)" d="M206 8H224L221 49H209Z"/>
+    <path transform="rotate(-3 215 63)" fill="url(#red)" d="M207 63Q207 54 216 54Q225 54 225 63Q225 72 216 72Q207 72 207 63Z"/>
+  </g>
+  <g fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" opacity=".5">
+    <path d="M19 17Q25 10 36 11"/><path d="M72 17V43"/><path d="M125 15V43"/><path d="M153 17V42"/><path d="M213 15L212 36"/>
+  </g>
+</svg>

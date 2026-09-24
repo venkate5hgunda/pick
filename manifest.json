@@ -1,0 +1,18 @@
+{
+  "name": "Pick! — Decision Wheel, Dice & Odds",
+  "short_name": "Pick!",
+  "description": "An interactive yes/no decision wheel, statistical batch simulation, and a dice roller with a dedicated Catan mode.",
+  "lang": "en",
+  "dir": "ltr",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#ffffff",
+  "theme_color": "#3b82f6",
+  "categories": ["utilities", "entertainment"],
+  "icons": [
+    { "src": "assets/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "assets/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}

@@ -1,4 +1,4 @@
-import { runMiniWheelBatch } from './wheel.js?v=9';
+import { runMiniWheelBatch } from './wheel.js?v=10';
 
 export class WheelBatchOverlay {
   constructor({ stage, mainElement, pointer, grid, status }) {

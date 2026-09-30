@@ -4,7 +4,7 @@ import { MotionAudio } from './audio.js?v=2';
 import { initModalDismissal } from './modal.js';
 import { initPrimaryTabs, initSoundControl } from './ui-controller.js';
 import { initWheelTab } from './wheel-tab.js?v=10';
-import { initDiceTab } from './dice-tab.js?v=5';
+import { initDiceTab } from './dice-tab.js?v=6';
 import { initVerseModal } from './verse-modal.js';
 import { initTooltips } from './tooltip.js';
 

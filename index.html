@@ -172,11 +172,15 @@
             <span class="toggle-track" aria-hidden="true"></span>
             Slightly loaded dice
           </label>
+          <label class="field">Seconds per settlement
+            <input id="catanSettlementSeconds" type="number" min="10" max="600" step="5" value="60">
+          </label>
           <button id="catanStartBtn" class="btn btn-primary" type="button">Start game</button>
         </div>
 
         <div id="catanGame" class="catan-game" hidden>
-          <div class="catan-turn">Current turn: <strong id="catanCurrentPlayer"></strong></div>
+          <div class="catan-turn"><span id="catanTurnLabel">Current turn:</span> <strong id="catanCurrentPlayer"></strong></div>
+          <p id="catanOrderBanner" class="muted" hidden></p>
           <button id="catanRollBtn" class="btn btn-primary btn-large" type="button">Roll</button>
           <div id="catanRollDisplay" class="dice-result" aria-live="polite"></div>
 
@@ -238,6 +242,18 @@
       <canvas id="catanHistogramCanvas" class="histogram-canvas" title="Catan totals compared with theoretical odds" hidden></canvas>
       <h3>Full log</h3>
       <div id="catanFullLog" class="catan-full-log"></div>
+    </div>
+  </div>
+
+  <div id="catanSettlementModal" class="modal" hidden>
+    <div class="modal-content settlement-modal-content">
+      <div class="modal-header">
+        <h2>Place settlements</h2>
+      </div>
+      <p id="catanSettlementRoundLabel" class="eyebrow"></p>
+      <div id="catanSettlementPlayer" class="settlement-player"></div>
+      <div id="catanSettlementTimer" class="settlement-timer" role="timer" aria-live="polite"></div>
+      <button id="catanSettlementNextBtn" class="btn btn-primary btn-large" type="button">Done — next player</button>
     </div>
   </div>
 

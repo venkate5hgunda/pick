@@ -7,7 +7,7 @@ import {
   expandInputSets,
   getSegmentArcs,
   pickSegmentIndex,
-} from './wheel.js?v=8';
+} from './wheel.js?v=9';
 import { WheelBatchOverlay } from './wheel-batch.js?v=3';
 import { batchVolumeScale } from './audio.js';
 import { BatchResultOverlay, WheelCelebration, summarizeBatchResults } from './celebration.js';
@@ -329,6 +329,11 @@ export function initWheelTab(motionAudio, haptics) {
   });
 
   new ResizeObserver(() => wheel.draw()).observe(stage);
+  // Belt-and-suspenders: force a redraw as soon as this tab panel is shown
+  // again, rather than relying solely on the ResizeObserver noticing the
+  // hidden -> visible size change (draw() itself now also skips no-op work
+  // while the panel is hidden, see wheel.js).
+  document.getElementById('tab-wheel')?.addEventListener('tab:shown', () => wheel.draw());
   ['pointerdown', 'pointermove', 'keydown', 'wheel', 'scroll', 'touchstart'].forEach((eventName) => {
     document.addEventListener(eventName, noteActivity, { capture: true, passive: true });
   });

@@ -3,14 +3,18 @@ import { createTracker, record, reset as resetTracker, toRows, ResponsiveHistogr
 import {
   rollStandard,
   createCatanGame,
+  currentCatanPlayer,
+  rollCatanOrderTurn,
   rollCatanTurn,
+  catanSettlementRound,
+  advanceCatanSettlement,
   catanPlayerStats,
   catanSumProbabilities,
   catanSumHistogram,
   catanGameExpiresAt,
   isCatanGameExpired,
   CATAN_HISTOGRAM_MIN_ROLLS,
-} from './dice.js?v=4';
+} from './dice.js?v=5';
 import { twoDiceSumProbabilities } from './random.js?v=2';
 import { DiceAnimator } from './dice-animation.js?v=4';
 
@@ -96,7 +100,10 @@ function initCatanMode(motionAudio) {
   const gamePanel = document.getElementById('catanGame');
   const startButton = document.getElementById('catanStartBtn');
   const unfairDiceInput = document.getElementById('catanUnfairDice');
+  const settlementSecondsInput = document.getElementById('catanSettlementSeconds');
+  const turnLabel = document.getElementById('catanTurnLabel');
   const currentPlayer = document.getElementById('catanCurrentPlayer');
+  const orderBanner = document.getElementById('catanOrderBanner');
   const rollButton = document.getElementById('catanRollBtn');
   const rollDisplay = document.getElementById('catanRollDisplay');
   const shortLog = document.getElementById('catanShortLog');
@@ -107,14 +114,22 @@ function initCatanMode(motionAudio) {
   const histogramGate = document.getElementById('catanHistogramGate');
   const histogramCanvas = document.getElementById('catanHistogramCanvas');
   const fullLog = document.getElementById('catanFullLog');
+  const settlementModal = document.getElementById('catanSettlementModal');
+  const settlementRoundLabel = document.getElementById('catanSettlementRoundLabel');
+  const settlementPlayerEl = document.getElementById('catanSettlementPlayer');
+  const settlementTimerEl = document.getElementById('catanSettlementTimer');
+  const settlementNextBtn = document.getElementById('catanSettlementNextBtn');
   const animator = new DiceAnimator(rollDisplay, { onImpact: (intensity) => motionAudio.impact(intensity) });
   const histogram = new ResponsiveHistogram(histogramCanvas, { theoretical: twoDiceSumProbabilities() });
   let game = loadJSON(KEYS.CATAN_LOG, null);
   let expirationTimer = null;
+  let settlementIntervalId = null;
+  let settlementRemaining = 0;
 
   function resetExpiredGame() {
     if (!game?.players?.length || !isCatanGameExpired(game)) return false;
-    game = createCatanGame(game.players, { unfairDice: game.unfairDice });
+    clearInterval(settlementIntervalId);
+    game = createCatanGame(game.players, { unfairDice: game.unfairDice, settlementSeconds: game.settlementSeconds });
     saveJSON(KEYS.CATAN_LOG, game);
     rollDisplay.replaceChildren();
     return true;
@@ -146,14 +161,86 @@ function initCatanMode(motionAudio) {
   }
 
   function renderTurn() {
-    currentPlayer.textContent = game.players[game.turnIndex];
+    currentPlayer.textContent = currentCatanPlayer(game);
+    turnLabel.textContent = game.orderPhase ? 'Rolling for turn order:' : 'Current turn:';
+    rollButton.textContent = game.orderPhase ? 'Roll for turn order' : 'Roll';
+  }
+
+  function renderOrderBanner() {
+    if (game.orderPhase) {
+      const tieBreak = game.orderQueue[0]?.length < game.players.length;
+      orderBanner.hidden = false;
+      orderBanner.textContent = tieBreak
+        ? `Tie! ${game.orderQueue[0].join(' & ')} roll again to break it.`
+        : 'Everyone rolls once — highest total goes first.';
+    } else if (!game.settlementPhase && game.log.length === 0) {
+      orderBanner.hidden = false;
+      orderBanner.textContent = `Turn order: ${game.players.join(' → ')}`;
+    } else {
+      orderBanner.hidden = true;
+    }
   }
 
   function renderShortLog() {
-    const recent = game.log.slice(-5).reverse();
+    const source = game.orderPhase ? game.orderRolls : game.log;
+    const recent = source.slice(-5).reverse();
     shortLog.innerHTML = recent.map((entry) =>
       `<li class="${entry.isRobber ? 'is-robber' : ''}"><span>${entry.player}</span><span>${entry.die1}+${entry.die2} = ${entry.sum}${entry.isRobber ? ' 🥷' : ''}</span></li>`)
       .join('') || '<li class="muted">No rolls yet.</li>';
+  }
+
+  function updateSettlementTimerDisplay() {
+    const minutes = Math.floor(settlementRemaining / 60);
+    const seconds = settlementRemaining % 60;
+    settlementTimerEl.textContent = `${minutes}:${String(seconds).padStart(2, '0')}`;
+    settlementTimerEl.classList.toggle('is-urgent', settlementRemaining <= 10);
+  }
+
+  function renderSettlementModal() {
+    settlementRoundLabel.textContent = catanSettlementRound(game) === 2 ? 'Second settlement' : 'First settlement';
+    settlementPlayerEl.textContent = currentCatanPlayer(game);
+  }
+
+  function startSettlementTimer() {
+    clearInterval(settlementIntervalId);
+    settlementRemaining = game.settlementSeconds;
+    updateSettlementTimerDisplay();
+    settlementIntervalId = window.setInterval(() => {
+      settlementRemaining -= 1;
+      updateSettlementTimerDisplay();
+      if (settlementRemaining <= 0) completeSettlementTurn();
+    }, 1000);
+  }
+
+  function completeSettlementTurn() {
+    clearInterval(settlementIntervalId);
+    settlementIntervalId = null;
+    advanceCatanSettlement(game);
+    saveJSON(KEYS.CATAN_LOG, game);
+    if (game.settlementPhase) {
+      renderSettlementModal();
+      startSettlementTimer();
+    } else {
+      settlementModal.hidden = true;
+      showGame();
+    }
+  }
+
+  function openSettlementModal() {
+    settlementModal.hidden = false;
+    renderSettlementModal();
+    startSettlementTimer();
+  }
+
+  function refreshPhaseUI() {
+    if (game.settlementPhase) {
+      rollButton.disabled = true;
+      openSettlementModal();
+    } else {
+      clearInterval(settlementIntervalId);
+      settlementModal.hidden = true;
+      rollButton.disabled = false;
+    }
   }
 
   function showGame() {
@@ -161,6 +248,8 @@ function initCatanMode(motionAudio) {
     gamePanel.hidden = false;
     renderTurn();
     renderShortLog();
+    renderOrderBanner();
+    refreshPhaseUI();
   }
 
   function openAnalytics() {
@@ -193,7 +282,8 @@ function initCatanMode(motionAudio) {
   playerCountSelect.addEventListener('change', renderNameInputs);
   startButton.addEventListener('click', () => {
     const names = Array.from(nameInputs.querySelectorAll('input')).map((input, index) => input.value.trim() || `Player ${index + 1}`);
-    game = createCatanGame(names, { unfairDice: unfairDiceInput.checked });
+    const settlementSeconds = parseInt(settlementSecondsInput.value, 10);
+    game = createCatanGame(names, { unfairDice: unfairDiceInput.checked, settlementSeconds });
     saveJSON(KEYS.CATAN_LOG, game);
     scheduleExpiration();
     showGame();
@@ -201,25 +291,30 @@ function initCatanMode(motionAudio) {
   async function roll() {
     if (!game || rollButton.disabled) return;
     rollButton.disabled = true;
-    const entry = rollCatanTurn(game);
+    const entry = game.orderPhase ? rollCatanOrderTurn(game) : rollCatanTurn(game);
     saveJSON(KEYS.CATAN_LOG, game);
     scheduleExpiration();
     await motionAudio.prepare();
     await animator.roll([entry.die1, entry.die2], DIE_SIDES, { total: entry.sum, suffix: entry.isRobber ? ' · Robber!' : '' });
     motionAudio.finish();
-    rollButton.disabled = false;
     renderTurn();
     renderShortLog();
+    renderOrderBanner();
+    refreshPhaseUI();
+    rollButton.disabled = game.settlementPhase;
   }
 
   rollButton.addEventListener('click', roll);
   bindArenaRoll(rollDisplay, roll);
+  settlementNextBtn.addEventListener('click', completeSettlementTurn);
   newGameButton.addEventListener('click', () => {
     clearTimeout(expirationTimer);
+    clearInterval(settlementIntervalId);
     game = null;
     saveJSON(KEYS.CATAN_LOG, null);
     setup.hidden = false;
     gamePanel.hidden = true;
+    settlementModal.hidden = true;
     rollDisplay.replaceChildren();
   });
   expandButton.addEventListener('click', openAnalytics);

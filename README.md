@@ -53,8 +53,10 @@ A fluid, static "yes/no wheel" — replicating [pickerwheel.com](https://pickerw
 
 ### Catan companion
 
-- Set up two to six players with optional names.
+- Set up two to six players with optional names and a configurable per-settlement placement timer (10–600s, default 60s).
 - Opt into subtly loaded dice that assign small, independent random deviations across all six faces of each die; the two distinct profiles persist only for that game, regenerate for a new game, and do not systematically favor high or low numbers.
+- Decide turn order at game start: every player rolls once, ranked by descending total; tied players immediately reroll against just each other (repeating until every tie is broken) before turn order is finalized. These order-decision rolls are excluded from all analytics (player stats, histograms, and the full log).
+- Once turn order is set, guide players through initial settlement placement with a pop-up that highlights the current player and counts down the configurable timer, auto-advancing (or via a manual "Done" button) to the next player in snake order — first settlement forward through turn order, then second settlement in reverse, so the last player to go first goes twice in a row before play begins.
 - Track the active player and automatically advance turns after each roll.
 - Animate two physical d6 dice and call out robber rolls.
 - Keep a concise recent-roll summary plus a complete persistent roll log.

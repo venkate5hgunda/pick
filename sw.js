@@ -2,7 +2,7 @@
 // KISS: a single static cache plus a generic runtime cache for same-origin
 // fetches. Network-first for navigations so the latest shell loads.
 
-const STATIC_CACHE = 'pick:static:v3';
+const STATIC_CACHE = 'pick:static:v4';
 const RUNTIME_CACHE = 'pick:runtime:v2';
 
 const STATIC_ASSETS = [

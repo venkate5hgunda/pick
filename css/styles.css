@@ -76,7 +76,7 @@ img { max-width: 100%; }
   filter: drop-shadow(0 -2px 0 #ffffff);
   transform: translateX(-50%);
 }
-.pointer img { position: relative; z-index: 1; width: 100%; height: auto; }
+.pointer svg { position: relative; z-index: 1; width: 100%; height: auto; }
 
 .mini-wheel-grid {
   position: absolute;
@@ -497,9 +497,12 @@ h2, h3, h4 { margin-top: 0; color: var(--text); }
 .header-actions { display: flex; align-items: center; gap: .6rem; }
 .icon { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 .icon-sprite { position: fixed; width: 0; height: 0; overflow: hidden; }
-.theme-toggle .sun-icon, .sound-off-icon { display: none; }
-.theme-toggle[data-mode='dark'] .moon-icon, .is-muted .sound-on-icon { display: none; }
-.theme-toggle[data-mode='dark'] .sun-icon, .is-muted .sound-off-icon { display: block; }
+.theme-toggle .sun-icon, .theme-toggle .moon-icon, .theme-toggle .auto-icon, .sound-off-icon { display: none; }
+.theme-toggle[data-mode='light'] .sun-icon { display: block; }
+.theme-toggle[data-mode='dark'] .moon-icon { display: block; }
+.theme-toggle[data-mode='auto'] .auto-icon { display: block; }
+.is-muted .sound-on-icon { display: none; }
+.is-muted .sound-off-icon { display: block; }
 #soundToggle { background: var(--surface); color: var(--text); }
 
 .tabs {
@@ -990,7 +993,24 @@ main { flex: 1; width: 100%; max-width: 1180px; margin: 0 auto; padding: 1.25rem
 .batch-row .field, .batch-row input, .batch-row .btn { width: 100%; }
 .batch-row .btn { min-height: 46px; }
 
-.stats-panel { margin-top: 2rem; padding: clamp(1rem, 3vw, 1.5rem); }
+.stats-panel { margin-top: 2rem; padding: 0; overflow: hidden; }
+.stats-panel summary {
+  padding: clamp(1rem, 3vw, 1.5rem);
+  color: var(--text);
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 600;
+  font-size: 1.25rem;
+  cursor: pointer;
+  user-select: none;
+}
+.stats-panel[open] summary { border-bottom: 2px solid color-mix(in srgb, var(--border) 22%, transparent); }
+.stats-panel-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0 clamp(1rem, 3vw, 1.5rem) clamp(1rem, 3vw, 1.5rem);
+}
+.stats-panel:not([open]) .stats-panel-content { display: none; }
 .stats-header h3 { margin: 0; font-size: 1.25rem; }
 .histogram-canvas {
   width: 100%;

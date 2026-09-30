@@ -1,37 +1,47 @@
 import { loadJSON, saveJSON, KEYS } from './storage.js';
 
 const media = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null;
+const MODES = ['auto', 'light', 'dark'];
+const MODE_LABELS = { auto: 'Auto', light: 'Light', dark: 'Dark' };
 
-function apply(theme) {
+function effectiveTheme(mode) {
+  if (mode === 'auto') return media && media.matches ? 'dark' : 'light';
+  return mode;
+}
+
+function apply(mode) {
+  const theme = effectiveTheme(mode);
   document.documentElement.setAttribute('data-theme', theme);
   window.dispatchEvent(new CustomEvent('pick:themechange', { detail: theme }));
   const toggle = document.getElementById('themeToggle');
   if (toggle) {
-    toggle.dataset.mode = theme;
-    const label = theme === 'dark' ? 'Use light theme' : 'Use dark theme';
+    toggle.dataset.mode = mode;
+    const label = `Theme: ${MODE_LABELS[mode]}${mode === 'auto' ? ` (${theme})` : ''}`;
     toggle.setAttribute('aria-label', label);
-    toggle.dataset.tooltip = label;
+    toggle.dataset.tooltip = `${label} — click to change`;
   }
 }
 
 export function initTheme() {
-  const stored = loadJSON(KEYS.THEME, null); // 'light' | 'dark' | null (auto)
-  apply(stored || (media && media.matches ? 'dark' : 'light'));
+  // 'auto' | 'light' | 'dark'; defaults to 'auto' unless the user has
+  // explicitly overridden it before.
+  let mode = loadJSON(KEYS.THEME, 'auto');
+  if (!MODES.includes(mode)) mode = 'auto';
+  apply(mode);
 
   if (media) {
-    media.addEventListener('change', (e) => {
-      // Only follow the OS if the user never explicitly overrode it.
-      if (loadJSON(KEYS.THEME, null) === null) apply(e.matches ? 'dark' : 'light');
+    media.addEventListener('change', () => {
+      // Only follow the OS when the user hasn't pinned an explicit mode.
+      if (mode === 'auto') apply('auto');
     });
   }
 
   const toggle = document.getElementById('themeToggle');
   if (toggle) {
     toggle.addEventListener('click', () => {
-      const current = document.documentElement.getAttribute('data-theme');
-      const next = current === 'dark' ? 'light' : 'dark';
-      saveJSON(KEYS.THEME, next);
-      apply(next);
+      mode = MODES[(MODES.indexOf(mode) + 1) % MODES.length];
+      saveJSON(KEYS.THEME, mode);
+      apply(mode);
     });
   }
 }

@@ -14,17 +14,49 @@
 <body>
   <header class="app-header">
     <div class="brand">
-      <img src="assets/logo.svg" class="brand-icon" alt="" width="36" height="36">
-      <img src="assets/wordmark.svg" class="brand-word" alt="Pick!">
+      <svg class="brand-icon" width="36" height="36" viewBox="0 0 112 112" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="">
+        <defs><filter id="logo-shadow" x="-20%" y="-20%" width="150%" height="160%"><feDropShadow dx="0" dy="5" stdDeviation="1" flood-color="#172036" flood-opacity=".35"/></filter></defs>
+        <g filter="url(#logo-shadow)">
+          <circle cx="56" cy="54" r="48" fill="#fff" stroke="#172036" stroke-width="6"/>
+          <path d="M56 54V7A47 47 0 0 1 96.7 30.5Z" fill="#ff5c55"/><path d="M56 54 96.7 30.5A47 47 0 0 1 96.7 77.5Z" fill="#ffd23f"/><path d="M56 54 96.7 77.5A47 47 0 0 1 56 101Z" fill="#22be81"/><path d="M56 54v47A47 47 0 0 1 15.3 77.5Z" fill="#4d9fff"/><path d="M56 54 15.3 77.5A47 47 0 0 1 15.3 30.5Z" fill="#f56aa0"/><path d="M56 54 15.3 30.5A47 47 0 0 1 56 7Z" fill="#ff8d3d"/>
+          <circle cx="56" cy="54" r="47" fill="none" stroke="#172036" stroke-width="5"/><path d="M47 3h18L56 18Z" fill="#172036" stroke="#fff" stroke-width="2" stroke-linejoin="round"/>
+          <g transform="rotate(-7 56 56)"><rect x="36" y="35" width="42" height="42" rx="10" fill="#fff" stroke="#172036" stroke-width="5"/><g fill="#172036"><circle cx="47" cy="46" r="3.7"/><circle cx="67" cy="46" r="3.7"/><circle cx="57" cy="56" r="3.7"/><circle cx="47" cy="66" r="3.7"/><circle cx="67" cy="66" r="3.7"/></g></g>
+        </g>
+      </svg>
+      <svg class="brand-word" viewBox="0 0 390 130" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Pick!">
+        <defs>
+          <filter id="wordmark-lift" x="-15%" y="-15%" width="140%" height="150%"><feDropShadow dx="0" dy="7" stdDeviation="0" flood-color="#172036"/></filter>
+          <linearGradient id="wordmark-red" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff7b6b"/><stop offset="1" stop-color="#f04444"/></linearGradient>
+          <linearGradient id="wordmark-yellow" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffd84a"/><stop offset="1" stop-color="#f4a622"/></linearGradient>
+          <linearGradient id="wordmark-green" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#54daa0"/><stop offset="1" stop-color="#13a66d"/></linearGradient>
+          <linearGradient id="wordmark-blue" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#67b7ff"/><stop offset="1" stop-color="#3478e5"/></linearGradient>
+        </defs>
+        <g filter="url(#wordmark-lift)" stroke="#172036" stroke-width="7" stroke-linejoin="round">
+          <path transform="rotate(-3 58 64)" fill="url(#wordmark-red)" fill-rule="evenodd" d="M22 104V27Q22 14 35 13L65 11Q92 10 94 38Q96 69 66 72L49 73V103ZM49 34V53L62 52Q70 51 69 42Q68 33 61 33Z"/>
+          <path transform="rotate(3 123 72)" fill="url(#wordmark-yellow)" d="M108 45Q108 38 117 37L130 36Q138 36 138 45V101Q138 108 130 108H117Q108 108 108 100Z"/>
+          <path transform="rotate(3 123 21)" fill="url(#wordmark-yellow)" d="M108 20Q108 10 119 9L129 10Q139 11 139 21Q139 32 128 33L118 32Q108 31 108 20Z"/>
+          <path transform="rotate(-2 178 73)" fill="url(#wordmark-green)" d="M207 52Q199 37 178 37Q146 37 145 72Q145 108 179 108Q200 108 209 91L188 80Q185 88 178 88Q169 88 169 73Q169 58 178 58Q185 58 188 65Z"/>
+          <path transform="rotate(3 252 64)" fill="url(#wordmark-blue)" d="M216 18Q216 11 225 11H237Q246 11 246 19V61L264 40Q269 35 276 39L289 47L269 69L291 97Q295 103 288 107L272 113L246 78V101Q246 109 237 109H225Q216 109 216 101Z"/>
+          <path transform="rotate(-4 327 51)" fill="url(#wordmark-red)" d="M309 22Q309 12 319 12H335Q345 12 344 22L340 76Q339 84 331 84H322Q314 84 313 76Z"/>
+          <path transform="rotate(-4 326 100)" fill="url(#wordmark-red)" d="M312 99Q312 87 326 87Q340 87 340 99Q340 112 326 112Q312 112 312 99Z"/>
+        </g>
+        <g fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" opacity=".48">
+          <path d="M34 27Q36 21 45 20H62"/><path d="M116 48V78"/><path d="M162 64Q165 51 178 50"/><path d="M227 24V53"/><path d="M320 24L318 52"/>
+        </g>
+        <path d="M355 20l4 9 9 4-9 4-4 9-4-9-9-4 9-4Z" fill="#ffd84a" stroke="#172036" stroke-width="3"/>
+        <path d="M365 72l2.5 5.5L373 80l-5.5 2.5L365 88l-2.5-5.5L357 80l5.5-2.5Z" fill="#54daa0" stroke="#172036" stroke-width="2.5"/>
+        <circle cx="350" cy="102" r="4" fill="#67b7ff" stroke="#172036" stroke-width="2.5"/>
+      </svg>
     </div>
     <div class="header-actions">
       <button id="soundToggle" class="icon-btn" aria-label="Mute sounds" data-tooltip="Mute sounds" type="button">
         <svg class="icon sound-on-icon" aria-hidden="true"><use href="#icon-volume"></use></svg>
         <svg class="icon sound-off-icon" aria-hidden="true"><use href="#icon-volume-off"></use></svg>
       </button>
-      <button id="themeToggle" class="icon-btn theme-toggle" aria-label="Use dark theme" data-tooltip="Use dark theme" type="button">
+      <button id="themeToggle" class="icon-btn theme-toggle" data-mode="auto" aria-label="Theme: Auto" data-tooltip="Theme: Auto (click to change)" type="button">
         <svg class="icon sun-icon" aria-hidden="true"><use href="#icon-sun"></use></svg>
         <svg class="icon moon-icon" aria-hidden="true"><use href="#icon-moon"></use></svg>
+        <svg class="icon auto-icon" aria-hidden="true"><use href="#icon-auto"></use></svg>
       </button>
     </div>
   </header>
@@ -39,8 +71,27 @@
       <div class="wheel-layout">
         <div class="wheel-stage" id="wheelStage">
           <div id="wheelPointer" class="pointer" aria-hidden="true">
-            <img src="assets/spin-wordmark.svg" alt="">
-          </div>
+          <svg viewBox="0 0 230 80" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Spin!">
+            <defs>
+              <filter id="spin-lift" x="-15%" y="-20%" width="140%" height="155%"><feDropShadow dx="0" dy="3" stdDeviation="0" flood-color="#080b12"/></filter>
+              <linearGradient id="spin-red" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#ff8178"/><stop offset="1" stop-color="#ff514b"/></linearGradient>
+              <linearGradient id="spin-yellow" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#ffe06a"/><stop offset="1" stop-color="#ffb927"/></linearGradient>
+              <linearGradient id="spin-green" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#64e3ad"/><stop offset="1" stop-color="#20b97c"/></linearGradient>
+              <linearGradient id="spin-blue" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#78c2ff"/><stop offset="1" stop-color="#3d8cf0"/></linearGradient>
+            </defs>
+            <g filter="url(#spin-lift)" stroke="#080b12" stroke-width="4" stroke-linejoin="round">
+              <path transform="rotate(-2 31 39)" fill="url(#spin-red)" d="M12 19Q15 5 35 5Q50 5 57 14L45 26Q39 19 31 19Q25 19 25 23Q25 27 37 29Q56 32 56 47Q56 64 34 69Q14 70 5 58L17 46Q25 56 34 55Q42 54 42 49Q42 45 29 44Q8 41 12 19Z"/>
+              <path transform="rotate(2 87 38)" fill="url(#spin-yellow)" fill-rule="evenodd" d="M64 68V8H89Q112 8 112 29Q112 50 89 51H81V68ZM81 23V37H89Q96 37 96 30Q96 23 89 23Z"/>
+              <path transform="rotate(-1 128 38)" fill="url(#spin-green)" d="M119 8H137V68H119Z"/>
+              <path transform="rotate(2 172 38)" fill="url(#spin-blue)" d="M145 68V8H161L181 38V8H198V68H182L162 39V68Z"/>
+              <path transform="rotate(-3 215 34)" fill="url(#spin-red)" d="M206 8H224L221 49H209Z"/>
+              <path transform="rotate(-3 215 63)" fill="url(#spin-red)" d="M207 63Q207 54 216 54Q225 54 225 63Q225 72 216 72Q207 72 207 63Z"/>
+            </g>
+            <g fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" opacity=".5">
+              <path d="M19 17Q25 10 36 11"/><path d="M72 17V43"/><path d="M125 15V43"/><path d="M153 17V42"/><path d="M213 15L212 36"/>
+            </g>
+          </svg>
+        </div>
           <div id="batchStatus" class="batch-status" role="status" hidden></div>
           <button id="wheelSpinSurface" class="wheel-spin-surface" type="button" aria-label="Spin the wheel" data-tooltip="Click to spin">
             <canvas id="wheelCanvas" class="wheel-canvas" aria-hidden="true"></canvas>
@@ -117,17 +168,17 @@
         </div>
       </div>
 
-      <div class="stats-panel">
-        <div class="stats-header">
-          <h3>Distribution</h3>
+      <details class="stats-panel">
+        <summary>Distribution</summary>
+        <div class="stats-panel-content">
           <div class="stats-actions">
             <button id="wheelStatsReset" class="btn btn-ghost" type="button">Reset</button>
             <button id="wheelStatsExport" class="btn btn-ghost" type="button">Export CSV</button>
           </div>
+          <canvas id="wheelHistogram" class="histogram-canvas" title="Observed wheel result distribution"></canvas>
+          <div id="wheelStatsTable" class="stats-table" role="region" aria-label="Wheel distribution details"></div>
         </div>
-        <canvas id="wheelHistogram" class="histogram-canvas" title="Observed wheel result distribution"></canvas>
-        <div id="wheelStatsTable" class="stats-table" role="region" aria-label="Wheel distribution details"></div>
-      </div>
+      </details>
     </section>
 
     <section id="tab-dice" class="tab-panel" role="tabpanel" hidden>
@@ -150,13 +201,15 @@
           <button id="rollDiceBtn" class="btn btn-primary" type="button">Roll</button>
         </div>
         <div id="diceResult" class="dice-result" aria-live="polite"></div>
-        <div class="stats-panel">
-          <div class="stats-header">
-            <h3>Totals distribution</h3>
-            <button id="diceStatsReset" class="btn btn-ghost" type="button">Reset</button>
+        <details class="stats-panel">
+          <summary>Totals distribution</summary>
+          <div class="stats-panel-content">
+            <div class="stats-actions">
+              <button id="diceStatsReset" class="btn btn-ghost" type="button">Reset</button>
+            </div>
+            <canvas id="diceHistogram" class="histogram-canvas" title="Distribution of rolled totals"></canvas>
           </div>
-          <canvas id="diceHistogram" class="histogram-canvas" title="Distribution of rolled totals"></canvas>
-        </div>
+        </details>
       </div>
 
       <div id="dicePanel-catan" class="dice-panel" hidden>
@@ -260,6 +313,7 @@
   <svg class="icon-sprite" aria-hidden="true">
     <symbol id="icon-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.66 6.34l1.41-1.41"/></symbol>
     <symbol id="icon-moon" viewBox="0 0 24 24"><path d="M20.7 16.4A9 9 0 1 1 7.6 3.3a7 7 0 0 0 13.1 13.1Z"/></symbol>
+    <symbol id="icon-auto" viewBox="0 0 24 24"><circle cx="8" cy="12" r="3"/><path d="M8 3v2M8 19v2M2 12h2M3.5 5.5l1.5 1.5M3.5 18.5l1.5-1.5"/><path d="M20.5 15A6 6 0 1 1 14 6a4.6 4.6 0 0 0 6.5 9Z"/></symbol>
     <symbol id="icon-volume" viewBox="0 0 24 24"><path d="M11 5 6 9H2v6h4l5 4ZM15.5 8.5a5 5 0 0 1 0 7M18 6a8.5 8.5 0 0 1 0 12"/></symbol>
     <symbol id="icon-volume-off" viewBox="0 0 24 24"><path d="m11 5-5 4H2v6h4l5 4ZM22 9l-6 6M16 9l6 6"/></symbol>
     <symbol id="icon-x" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></symbol>

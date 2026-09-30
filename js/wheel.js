@@ -102,7 +102,17 @@ export class Wheel {
     // percentage of a possibly-unequal parent box) keeps the rendered square
     // truly square and centered no matter how the parent rounds.
     const rect = canvas.getBoundingClientRect();
-    const size = Math.max(1, Math.floor(Math.min(rect.width, rect.height))) || canvas.clientWidth || 280;
+    const measured = Math.floor(Math.min(rect.width, rect.height));
+    // While the Wheel tab (or its ancestor) is hidden — `display: none` via
+    // the `hidden` attribute — the canvas has no box at all, so this reads
+    // as 0x0. Previously that fell through to a forced 1px square (`r` went
+    // negative, crashing `ctx.arc` and, worse, permanently pinning the
+    // canvas's inline style to 1px). Bail out instead and leave whatever was
+    // last drawn alone; switching back to the tab triggers a fresh draw()
+    // once the box has real dimensions again (see the ResizeObserver in
+    // wheel-tab.js and the explicit tab-activation redraw hook).
+    if (measured < 16) return;
+    const size = measured;
     canvas.style.width = `${size}px`;
     canvas.style.height = `${size}px`;
     canvas.width = size * dpr;

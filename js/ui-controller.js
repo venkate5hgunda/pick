@@ -50,7 +50,15 @@ export function initPrimaryTabs() {
       button.setAttribute('aria-selected', String(active));
     });
     Object.entries(panels).forEach(([name, panel]) => {
+      const wasHidden = panel.hidden;
       panel.hidden = name !== tabName;
+      // Let listeners (e.g. the wheel's ResizeObserver-driven redraw) know a
+      // panel just went from hidden -> visible, so anything that skipped
+      // work while hidden (zero-size canvases, etc.) can redraw now that it
+      // has real layout dimensions again.
+      if (wasHidden && !panel.hidden) {
+        panel.dispatchEvent(new CustomEvent('tab:shown', { bubbles: false }));
+      }
     });
     saveJSON(KEYS.WHEEL_ACTIVE_TAB, tabName);
   }

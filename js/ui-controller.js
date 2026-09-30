@@ -1,9 +1,11 @@
 import { loadJSON, saveJSON, KEYS } from './storage.js';
 
-export function initSoundControl(motionAudio) {
+export function initSoundControl(motionAudio, haptics) {
   const toggle = document.getElementById('soundToggle');
   const apply = (enabled) => {
     motionAudio.setEnabled(enabled);
+    haptics?.setEnabled(enabled);
+    if (!enabled) haptics?.cancel();
     toggle.classList.toggle('is-muted', !enabled);
     const label = enabled ? 'Mute sounds' : 'Enable sounds';
     toggle.setAttribute('aria-label', label);
@@ -17,6 +19,21 @@ export function initSoundControl(motionAudio) {
     apply(enabled);
     if (enabled) await motionAudio.prepare();
   });
+
+  // iOS/iPadOS WebKit only unlocks (and keeps unlocked) an AudioContext when
+  // creation/resume ties back to a genuine user gesture. Priming on the very
+  // first touch/pointer/key input anywhere on the page — before any specific
+  // roll/spin button is pressed — gives every later cue the best chance of
+  // actually being audible there, without waiting on a second interaction.
+  const primeOnce = () => {
+    motionAudio.prepare();
+    document.removeEventListener('pointerdown', primeOnce);
+    document.removeEventListener('touchend', primeOnce);
+    document.removeEventListener('keydown', primeOnce);
+  };
+  document.addEventListener('pointerdown', primeOnce, { once: true, passive: true });
+  document.addEventListener('touchend', primeOnce, { once: true, passive: true });
+  document.addEventListener('keydown', primeOnce, { once: true });
 }
 
 export function initPrimaryTabs() {

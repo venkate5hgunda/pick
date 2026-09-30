@@ -91,7 +91,20 @@ export class Wheel {
   draw() {
     const { canvas, ctx, segments, rotation } = this;
     const dpr = window.devicePixelRatio || 1;
-    const size = Math.min(canvas.clientWidth, canvas.clientHeight) || canvas.clientWidth || 280;
+    // Chromium on iPadOS has been observed to round a canvas's clientWidth and
+    // clientHeight to slightly different integer CSS pixels even when the
+    // parent box is a perfect square (aspect-ratio: 1) — Safari/WebKit do not
+    // show this. That 1px-or-so mismatch stretches the (always literally
+    // square) bitmap non-uniformly, reading as a subtly distorted, off-center
+    // wheel. getBoundingClientRect() gives the true, sub-pixel box for both
+    // axes read at the same instant, and pinning the element's own CSS width/
+    // height to that exact matching value (rather than leaving it as a
+    // percentage of a possibly-unequal parent box) keeps the rendered square
+    // truly square and centered no matter how the parent rounds.
+    const rect = canvas.getBoundingClientRect();
+    const size = Math.max(1, Math.floor(Math.min(rect.width, rect.height))) || canvas.clientWidth || 280;
+    canvas.style.width = `${size}px`;
+    canvas.style.height = `${size}px`;
     canvas.width = size * dpr;
     canvas.height = size * dpr;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);

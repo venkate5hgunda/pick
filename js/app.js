@@ -1,22 +1,25 @@
 import { initTheme } from './theme.js';
 import { loadJSON, KEYS } from './storage.js';
-import { MotionAudio } from './audio.js?v=2';
+import { MotionAudio } from './audio.js?v=3';
+import { Haptics } from './haptics.js';
 import { initModalDismissal } from './modal.js';
-import { initPrimaryTabs, initSoundControl } from './ui-controller.js';
-import { initWheelTab } from './wheel-tab.js?v=10';
-import { initDiceTab } from './dice-tab.js?v=6';
+import { initPrimaryTabs, initSoundControl } from './ui-controller.js?v=2';
+import { initWheelTab } from './wheel-tab.js?v=11';
+import { initDiceTab } from './dice-tab.js?v=7';
 import { initVerseModal } from './verse-modal.js';
 import { initTooltips } from './tooltip.js';
 
 initTheme();
 
-const motionAudio = new MotionAudio(loadJSON(KEYS.SOUND_ENABLED, true));
+const soundEnabled = loadJSON(KEYS.SOUND_ENABLED, true);
+const motionAudio = new MotionAudio(soundEnabled);
+const haptics = new Haptics(soundEnabled);
 
-initSoundControl(motionAudio);
+initSoundControl(motionAudio, haptics);
 initModalDismissal();
 initPrimaryTabs();
-initWheelTab(motionAudio);
-initDiceTab(motionAudio);
+initWheelTab(motionAudio, haptics);
+initDiceTab(motionAudio, haptics);
 initVerseModal();
 initTooltips();
 

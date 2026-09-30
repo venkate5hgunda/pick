@@ -48,7 +48,7 @@ export function committedWheelWeight(value, fallback = 1) {
   return Number.isInteger(parsed) && parsed >= 1 ? parsed : fallback;
 }
 
-export function initWheelTab(motionAudio) {
+export function initWheelTab(motionAudio, haptics) {
   const canvas = document.getElementById('wheelCanvas');
   const spinSurface = document.getElementById('wheelSpinSurface');
   const editor = document.getElementById('segmentEditor');
@@ -256,7 +256,7 @@ export function initWheelTab(motionAudio) {
       spinButton.disabled = false;
       spinSurface.disabled = false;
       motionAudio.finish();
-      if (navigator.vibrate) navigator.vibrate(60);
+      haptics?.impact(0.6);
       armIdleRotation();
     }, { onFrame: ({ rotation, velocity }) => motionAudio.syncWheel(rotation, velocity, boundaries) });
   }

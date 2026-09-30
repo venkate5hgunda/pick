@@ -31,7 +31,7 @@ function bindArenaRoll(container, roll) {
   });
 }
 
-export function initDiceTab(motionAudio) {
+export function initDiceTab(motionAudio, haptics) {
   const modeButtons = document.querySelectorAll('.mode-btn');
   const panels = {
     standard: document.getElementById('dicePanel-standard'),
@@ -48,11 +48,11 @@ export function initDiceTab(motionAudio) {
 
   const savedButton = document.querySelector(`.mode-btn[data-mode="${loadJSON(KEYS.DICE_MODE, 'standard')}"]`);
   savedButton?.click();
-  initStandardDice(motionAudio);
-  initCatanMode(motionAudio);
+  initStandardDice(motionAudio, haptics);
+  initCatanMode(motionAudio, haptics);
 }
 
-function initStandardDice(motionAudio) {
+function initStandardDice(motionAudio, haptics) {
   const countInput = document.getElementById('diceCount');
   const modifierInput = document.getElementById('diceModifier');
   const rollButton = document.getElementById('rollDiceBtn');
@@ -60,7 +60,9 @@ function initStandardDice(motionAudio) {
   const histogram = new ResponsiveHistogram(document.getElementById('diceHistogram'));
   const resetButton = document.getElementById('diceStatsReset');
   const tracker = createTracker(loadJSON(KEYS.DICE_STANDARD_STATS, {}));
-  const animator = new DiceAnimator(result, { onImpact: (intensity) => motionAudio.impact(intensity) });
+  const animator = new DiceAnimator(result, {
+    onImpact: (intensity) => { motionAudio.impact(intensity); haptics?.impact(intensity); },
+  });
 
   function refresh() {
     histogram.render(toRows(tracker).sort((left, right) => Number(left.label) - Number(right.label)));
@@ -93,7 +95,7 @@ function initStandardDice(motionAudio) {
   refresh();
 }
 
-function initCatanMode(motionAudio) {
+function initCatanMode(motionAudio, haptics) {
   const playerCountSelect = document.getElementById('catanPlayerCount');
   const nameInputs = document.getElementById('catanNameInputs');
   const setup = document.getElementById('catanSetup');
@@ -119,7 +121,9 @@ function initCatanMode(motionAudio) {
   const settlementPlayerEl = document.getElementById('catanSettlementPlayer');
   const settlementTimerEl = document.getElementById('catanSettlementTimer');
   const settlementNextBtn = document.getElementById('catanSettlementNextBtn');
-  const animator = new DiceAnimator(rollDisplay, { onImpact: (intensity) => motionAudio.impact(intensity) });
+  const animator = new DiceAnimator(rollDisplay, {
+    onImpact: (intensity) => { motionAudio.impact(intensity); haptics?.impact(intensity); },
+  });
   const histogram = new ResponsiveHistogram(histogramCanvas, { theoretical: twoDiceSumProbabilities() });
   let game = loadJSON(KEYS.CATAN_LOG, null);
   let expirationTimer = null;

@@ -45,7 +45,7 @@ img { max-width: 100%; }
   margin: 0 auto;
 }
 
-.wheel-canvas { width: 100%; height: 100%; display: block; }
+.wheel-canvas { width: 100%; height: 100%; max-width: 100%; max-height: 100%; aspect-ratio: 1; display: block; margin: auto; }
 
 .pointer {
   position: absolute;
@@ -617,7 +617,9 @@ main { flex: 1; width: 100%; max-width: 1180px; margin: 0 auto; padding: 1.25rem
 .wheel-stage.is-batch-mode::after { display: none; }
 
 .wheel-spin-surface {
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 100%;
   height: 100%;
   padding: 0;

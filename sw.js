@@ -2,8 +2,8 @@
 // KISS: a single static cache plus a generic runtime cache for same-origin
 // fetches. Network-first for navigations so the latest shell loads.
 
-const STATIC_CACHE = 'pick:static:v1';
-const RUNTIME_CACHE = 'pick:runtime:v1';
+const STATIC_CACHE = 'pick:static:v2';
+const RUNTIME_CACHE = 'pick:runtime:v2';
 
 const STATIC_ASSETS = [
   './',
@@ -16,6 +16,7 @@ const STATIC_ASSETS = [
   './js/dice-animation.js',
   './js/dice-tab.js',
   './js/dice.js',
+  './js/haptics.js',
   './js/modal.js',
   './js/random.js',
   './js/stats.js',

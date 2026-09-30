@@ -47,10 +47,31 @@ export class MotionAudio {
     this.master = null;
     this.noiseBuffer = null;
     this.wheelRotations = new Map();
+    this.unlocked = false;
+    this.attachAutoResume();
   }
 
   setEnabled(enabled) {
     this.enabled = enabled;
+  }
+
+  /**
+   * iOS Safari/Chrome (both WebKit) aggressively suspend the AudioContext
+   * whenever the page is backgrounded, the screen locks, or Safari reclaims
+   * the tab — `resume()` from inside a later click handler alone can silently
+   * no-op there. Re-resuming whenever the page regains visibility/focus
+   * keeps audio usable across app switches instead of going permanently silent.
+   */
+  attachAutoResume() {
+    if (typeof document === 'undefined' || typeof window === 'undefined') return;
+    const tryResume = () => {
+      if (this.context && this.context.state === 'suspended') this.context.resume().catch(() => {});
+    };
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible') tryResume();
+    });
+    window.addEventListener?.('pageshow', tryResume);
+    window.addEventListener?.('focus', tryResume);
   }
 
   async prepare() {
@@ -68,7 +89,30 @@ export class MotionAudio {
       this.master.connect(this.context.destination);
       this.noiseBuffer = this.createNoiseBuffer();
     }
-    if (this.context.state === 'suspended') await this.context.resume();
+    if (this.context.state === 'suspended') {
+      await this.context.resume();
+    }
+    if (!this.unlocked) this.unlock();
+  }
+
+  /**
+   * WebKit on iOS can report `state === 'running'` after `resume()` yet still
+   * drop all subsequently *scheduled* (not immediately-started) sound — the
+   * documented fix is to synchronously play one truly-silent buffer so the
+   * audio hardware pipeline is fully primed before real cues are scheduled.
+   * Cheap and idempotent, so it's safe to call defensively on every prepare().
+   */
+  unlock() {
+    if (!this.context) return;
+    try {
+      const source = this.context.createBufferSource();
+      source.buffer = this.context.createBuffer(1, 1, this.context.sampleRate);
+      source.connect(this.context.destination);
+      source.start(0);
+      this.unlocked = true;
+    } catch {
+      /* non-fatal — worst case a later cue is silently dropped on very old browsers */
+    }
   }
 
   beginWheel() {

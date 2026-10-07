@@ -109,3 +109,9 @@ npm test
 1. Push this repo (or the `pick/` folder) to GitHub.
 2. In **Settings → Pages**, set the source to the branch/folder containing `index.html` (e.g. `main` branch, `/pick` folder, or move contents to repo root / `docs/`).
 3. Visit the published URL — everything runs client-side, no server or API keys required.
+
+## License
+
+Original project code and assets are licensed under the [MIT License](LICENSE).
+Copyright (c) 2026 Venkatesh Gunda.
+Third-party code, assets, and content remain subject to their respective licenses.

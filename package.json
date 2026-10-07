@@ -2,6 +2,7 @@
   "name": "pick",
   "version": "1.0.0",
   "private": true,
+  "license": "MIT",
   "type": "module",
   "description": "Pick! — an interactive yes/no wheel, dice roller (standard + Catan), live statistics, and a hidden bible-verse easter egg. Static site, no build step, deployable on GitHub Pages.",
   "scripts": {

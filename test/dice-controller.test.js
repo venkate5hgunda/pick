@@ -9,6 +9,7 @@ import { KEYS } from '../js/storage.js';
 
 function setup(game) {
   const state = { now: Date.now(), html: [] };
+  state.rollStarted = new Promise((resolve) => { state.onRollStarted = resolve; });
   class Element {
     constructor() {
       this.children = [];
@@ -46,7 +47,7 @@ function setup(game) {
     openModal: (modal) => { modal.hidden = false; },
     closeModal: (modal) => { modal.hidden = true; },
     ResponsiveHistogram: class { render() {} },
-    DiceAnimator: class { roll() { return new Promise((resolve) => { state.completeRoll = resolve; }); } },
+    DiceAnimator: class { roll() { state.onRollStarted(); return new Promise((resolve) => { state.completeRoll = resolve; }); } },
     audio: { prepare: async () => {}, finish() {} },
   });
   return { get, state };
@@ -78,8 +79,7 @@ test('new game during a pending roll prevents stale completion from touching cle
   while (game.settlementPhase) dice.advanceCatanSettlement(game);
   const h = setup(game);
   const pending = h.get('catanRollBtn').fire('click');
-  await Promise.resolve();
-  await Promise.resolve();
+  await h.state.rollStarted;
   await h.get('catanNewGameBtn').fire('click');
   h.state.completeRoll();
   await pending;

@@ -1,3 +1,4 @@
+import { openModal } from './modal.js?v=2';
 import { loadJSON, saveJSON, KEYS } from './storage.js';
 import {
   DEFAULT_TRANSLATION,
@@ -59,7 +60,7 @@ export function initVerseModal() {
   }
 
   trigger.addEventListener('click', async () => {
-    modal.hidden = false;
+    openModal(modal);
     if (!translations.length) await populateTranslations();
     await showVerse();
   });

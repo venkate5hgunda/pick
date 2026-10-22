@@ -1,4 +1,4 @@
-import { runMiniWheelBatch } from './wheel.js?v=10';
+import { runMiniWheelBatch } from './wheel.js?v=11';
 
 export class WheelBatchOverlay {
   constructor({ stage, mainElement, pointer, grid, status }) {
@@ -32,6 +32,8 @@ export class WheelBatchOverlay {
   async run(segments, count, options) {
     this.show(count);
     const results = await runMiniWheelBatch(this.grid, segments, count, options);
+    if (!results || options?.signal?.aborted) return null;
+    this.stage.removeAttribute('aria-busy');
     this.status.textContent = `${count} wheels settled`;
     return results;
   }

@@ -87,12 +87,21 @@ export function createCatanGame(playerNames, { unfairDice = false, settlementSec
   if (!Array.isArray(playerNames) || playerNames.length < 2 || playerNames.length > 6) {
     throw new Error('createCatanGame: expects 2-6 player names');
   }
+  const used = new Set();
+  const players = playerNames.map((name, index) => {
+    const base = String(name || '').trim() || `Player ${index + 1}`;
+    let label = base;
+    let suffix = 2;
+    while (used.has(label)) label = `${base} (${suffix++})`;
+    used.add(label);
+    return label;
+  });
   const loaded = Boolean(unfairDice);
   const seconds = Number.isFinite(settlementSeconds) && settlementSeconds > 0
-    ? settlementSeconds
+    ? Math.min(600, Math.max(10, Math.round(settlementSeconds)))
     : CATAN_DEFAULT_SETTLEMENT_SECONDS;
   return {
-    players: playerNames.slice(),
+    players: players.slice(),
     unfairDice: loaded,
     diceWeights: loaded ? createCatanDiceWeights(rand) : null,
     turnIndex: 0,
@@ -103,9 +112,9 @@ export function createCatanGame(playerNames, { unfairDice = false, settlementSec
     // `log` so they never factor into per-player analytics.
     orderPhase: true,
     orderRolls: [], // { player, die1, die2, sum, timestamp }
-    orderQueue: [playerNames.slice()],
+    orderQueue: [players.slice()],
     orderFinal: [],
-    orderPending: playerNames.slice(),
+    orderPending: players.slice(),
     orderAttempt: [], // { player, sum } rolls collected for the current roll-off
     // Once turn order is set, players place two settlements each in "snake" order
     // (forward, then reverse) before real rolling begins. `settlementSeconds` is a
@@ -186,6 +195,7 @@ export function rollCatanTurn(game, now = Date.now(), rand = randomFloat) {
   const [die1, die2] = rolls;
   const entry = {
     player: game.players[game.turnIndex],
+    playerIndex: game.turnIndex,
     die1,
     die2,
     sum: total,
@@ -217,8 +227,9 @@ export function isCatanGameExpired(game, now = Date.now()) {
 
 /** Per-player summary: rolls taken, robber count, average roll. */
 export function catanPlayerStats(game) {
-  return game.players.map((name) => {
-    const rolls = game.log.filter((e) => e.player === name);
+  return game.players.map((name, playerIndex) => {
+    // Older logs omit playerIndex; rolls have always followed the saved turn order.
+    const rolls = game.log.filter((entry, index) => (entry.playerIndex ?? index % game.players.length) === playerIndex);
     const robberCount = rolls.filter((e) => e.isRobber).length;
     const avg = rolls.length ? rolls.reduce((s, e) => s + e.sum, 0) / rolls.length : 0;
     return { player: name, rollCount: rolls.length, robberCount, average: Math.round(avg * 100) / 100 };

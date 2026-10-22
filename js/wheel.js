@@ -44,7 +44,9 @@ export function contrastTextColor(hexColor) {
   const channels = [0, 2, 4].map((offset) => parseInt(hex.slice(offset, offset + 2), 16) / 255)
     .map((channel) => channel <= 0.03928 ? channel / 12.92 : ((channel + 0.055) / 1.055) ** 2.4);
   const luminance = channels[0] * 0.2126 + channels[1] * 0.7152 + channels[2] * 0.0722;
-  return luminance > 0.42 ? '#172036' : '#ffffff';
+  if (1.05 / (luminance + 0.05) >= 4.5) return '#ffffff';
+  const darkLuminance = 0.014815238765286346; // #172036
+  return (luminance + 0.05) / (darkLuminance + 0.05) >= 4.5 ? '#172036' : '#000000';
 }
 
 export function getSegmentArcs(segments) {
@@ -184,39 +186,57 @@ export class Wheel {
   }
 
   /** Spins to land on `targetIndex`, calling onDone(targetIndex) when settled. */
-  spinTo(targetIndex, durationMs, onDone, { onFrame } = {}) {
+  spinTo(targetIndex, durationMs, onDone, { onFrame, signal } = {}) {
+    this._cancelSpin?.();
     this.stopIdleRotation();
-    // Pointer is fixed at the top (angle -PI/2). Rotate so the target slice's
-    // center ends up under the pointer, plus a few full spins for effect.
+    if (signal?.aborted) return Promise.resolve(false);
     const extraSpins = 5 + Math.floor(Math.random() * 2);
     const finalRotation = finalRotationForTarget(this.segments, targetIndex, extraSpins);
-
     const startRotation = this.rotation;
-    // Normalize so we always spin forward (negative direction) a full amount.
     const delta = finalRotation - startRotation;
     const start = performance.now();
     const spinProgress = createSpinProfile();
     let previousRotation = startRotation;
     let previousTime = start;
 
-    const step = (now) => {
-      const t = Math.min(1, (now - start) / durationMs);
-      this.rotation = startRotation + delta * spinProgress(t);
-      this.draw();
-      const elapsedSeconds = Math.max(0.001, (now - previousTime) / 1000);
-      const velocity = Math.abs(this.rotation - previousRotation) / elapsedSeconds;
-      onFrame?.({ rotation: this.rotation, velocity, progress: t });
-      previousRotation = this.rotation;
-      previousTime = now;
-      if (t < 1) {
-        this._raf = requestAnimationFrame(step);
-      } else {
-        this.rotation = finalRotation % TAU;
-        onDone && onDone(targetIndex);
-      }
-    };
-    cancelAnimationFrame(this._raf);
-    this._raf = requestAnimationFrame(step);
+    return new Promise((resolve, reject) => {
+      const cleanup = () => {
+        cancelAnimationFrame(this._raf);
+        this._raf = null;
+        this._cancelSpin = null;
+        signal?.removeEventListener('abort', cancel);
+      };
+      const cancel = () => {
+        cleanup();
+        resolve(false);
+      };
+      this._cancelSpin = cancel;
+      signal?.addEventListener('abort', cancel, { once: true });
+      const step = (now) => {
+        if (signal?.aborted) { cancel(); return; }
+        try {
+          const t = Math.min(1, (now - start) / durationMs);
+          this.rotation = startRotation + delta * spinProgress(t);
+          this.draw();
+          const elapsedSeconds = Math.max(0.001, (now - previousTime) / 1000);
+          const velocity = Math.abs(this.rotation - previousRotation) / elapsedSeconds;
+          onFrame?.({ rotation: this.rotation, velocity, progress: t });
+          previousRotation = this.rotation;
+          previousTime = now;
+          if (t < 1) this._raf = requestAnimationFrame(step);
+          else {
+            this.rotation = finalRotation % TAU;
+            cleanup();
+            onDone?.(targetIndex);
+            resolve(true);
+          }
+        } catch (error) {
+          cleanup();
+          reject(error);
+        }
+      };
+      this._raf = requestAnimationFrame(step);
+    });
   }
 }
 
@@ -247,37 +267,63 @@ export function runMiniWheelBatch(gridEl, segments, count, {
   minDuration = BATCH_SPIN_MIN_DURATION_MS,
   maxDuration = BATCH_SPIN_MAX_DURATION_MS,
   onMotion,
+  signal,
 } = {}) {
   gridEl.innerHTML = '';
   const { columns, rows } = miniWheelGridDimensions(count);
   gridEl.style.gridTemplateColumns = `repeat(${columns}, minmax(0, 1fr))`;
   gridEl.style.gridTemplateRows = `repeat(${rows}, minmax(0, 1fr))`;
 
-  const results = new Array(count).fill(null);
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
+    const timers = [];
+    const results = new Array(count).fill(null);
+    // A local signal also stops sibling wheels if one animation fails.
+    const controller = new AbortController();
     let settled = 0;
-    for (let i = 0; i < count; i++) {
+    let finished = false;
+    const cleanup = () => {
+      finished = true;
+      timers.forEach(clearTimeout);
+      signal?.removeEventListener('abort', cancel);
+      controller.abort();
+    };
+    const cancel = () => {
+      if (finished) return;
+      cleanup();
+      resolve(null);
+    };
+    if (signal?.aborted) { cancel(); return; }
+    signal?.addEventListener('abort', cancel, { once: true });
+    for (let i = 0; i < count; i += 1) {
       const cell = document.createElement('div');
       cell.className = 'mini-wheel-cell';
       const canvas = document.createElement('canvas');
       canvas.className = 'mini-wheel-canvas';
       cell.appendChild(canvas);
       gridEl.appendChild(cell);
-
       const wheel = new Wheel(canvas, segments);
       wheel.draw();
       const targetIndex = pickSegmentIndex(segments);
       const duration = minDuration + Math.random() * (maxDuration - minDuration);
-      // Stagger start slightly so they don't render in perfect lockstep.
-      setTimeout(() => {
-        wheel.spinTo(targetIndex, duration, () => {
+      timers.push(setTimeout(() => {
+        if (finished) return;
+        wheel.spinTo(targetIndex, duration, null, {
+          signal: controller.signal,
+          onFrame: (motion) => onMotion?.({ ...motion, wheelIndex: i, wheelCount: count }),
+        }).then((completed) => {
+          if (finished || !completed) return;
           results[i] = targetIndex;
           settled += 1;
-          if (settled === count) resolve(results);
-        }, {
-          onFrame: (motion) => onMotion?.({ ...motion, wheelIndex: i, wheelCount: count }),
+          if (settled === count) {
+            cleanup();
+            resolve(results);
+          }
+        }).catch((error) => {
+          if (finished) return;
+          cleanup();
+          reject(error);
         });
-      }, Math.random() * 150);
+      }, Math.random() * 150));
     }
   });
 }

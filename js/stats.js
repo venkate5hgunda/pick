@@ -2,11 +2,18 @@
 // and unit-tested; render() touches the DOM/canvas only.
 
 export function createTracker(initialCounts = {}) {
-  return { counts: { ...initialCounts }, total: Object.values(initialCounts).reduce((a, b) => a + b, 0) };
+  const counts = {};
+  Object.entries(initialCounts || {}).forEach(([label, count]) => {
+    if (Number.isSafeInteger(count) && count >= 0) {
+      Object.defineProperty(counts, label, { value: count, writable: true, enumerable: true, configurable: true });
+    }
+  });
+  return { counts, total: Object.values(counts).reduce((sum, count) => sum + count, 0) };
 }
 
 export function record(tracker, label) {
-  tracker.counts[label] = (tracker.counts[label] || 0) + 1;
+  const count = Object.hasOwn(tracker.counts, label) ? tracker.counts[label] : 0;
+  Object.defineProperty(tracker.counts, label, { value: count + 1, writable: true, enumerable: true, configurable: true });
   tracker.total += 1;
   return tracker;
 }
@@ -19,12 +26,18 @@ export function reset(tracker) {
 
 /** Returns [{ label, count, percent }] sorted by insertion/label order given. */
 export function toRows(tracker, orderedLabels) {
-  const labels = orderedLabels || Object.keys(tracker.counts);
+  // Retain historical categories when options change, and aggregate repeated labels.
+  const labels = [...new Set([...(orderedLabels || []), ...Object.keys(tracker.counts)])];
   return labels.map((label) => {
-    const count = tracker.counts[label] || 0;
+    const count = Object.hasOwn(tracker.counts, label) ? tracker.counts[label] : 0;
     const percent = tracker.total > 0 ? (count / tracker.total) * 100 : 0;
     return { label, count, percent };
   });
+}
+
+export function rowsToCSV(rows) {
+  const quote = (value) => '"' + String(value).replaceAll('"', '""') + '"';
+  return ['label,count,percent', ...rows.map((row) => `${quote(row.label)},${row.count},${row.percent.toFixed(2)}`)].join('\r\n');
 }
 
 /**

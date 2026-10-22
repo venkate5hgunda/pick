@@ -283,3 +283,29 @@ test('catanSumHistogram buckets sums 2..12 into 11 slots', () => {
   assert.equal(hist.reduce((a, b) => a + b, 0), 20);
 });
 
+
+test('duplicate player names are disambiguated without combining statistics', () => {
+  const game = createCatanGame(['Alex', 'Alex']);
+  assert.deepEqual(game.players, ['Alex', 'Alex (2)']);
+  resolveCatanOrder(game, sequenceRand([0.99, 0.99, 0, 0]));
+  resolveCatanSettlements(game);
+  rollCatanTurn(game, 1_000, () => 0);
+  rollCatanTurn(game, 2_000, () => 0.99);
+  assert.deepEqual(catanPlayerStats(game).map((player) => player.rollCount), [1, 1]);
+  assert.deepEqual(catanPlayerStats(game).map((player) => player.average), [2, 12]);
+});
+
+test('legacy logs with duplicate names use each player turn rather than the shared name', () => {
+  const game = createCatanGame(['Alex', 'Alex']);
+  game.players = ['Alex', 'Alex'];
+  game.log = [
+    { player: 'Alex', sum: 2, isRobber: false },
+    { player: 'Alex', sum: 12, isRobber: false },
+  ];
+  assert.deepEqual(catanPlayerStats(game).map((player) => player.average), [2, 12]);
+});
+
+test('settlement timer respects its advertised ten-to-six-hundred-second range', () => {
+  assert.equal(createCatanGame(['A', 'B'], { settlementSeconds: 1 }).settlementSeconds, 10);
+  assert.equal(createCatanGame(['A', 'B'], { settlementSeconds: 1000 }).settlementSeconds, 600);
+});

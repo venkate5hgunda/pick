@@ -2,39 +2,52 @@
 // KISS: a single static cache plus a generic runtime cache for same-origin
 // fetches. Network-first for navigations so the latest shell loads.
 
-const STATIC_CACHE = 'pick:static:v4';
-const RUNTIME_CACHE = 'pick:runtime:v2';
+const STATIC_CACHE = 'pick:static:v5';
+const RUNTIME_CACHE = 'pick:runtime:v3';
 
 const STATIC_ASSETS = [
-  './',
-  './index.html',
-  './manifest.json',
-  './css/styles.css',
-  './js/app.js',
-  './js/audio.js',
-  './js/celebration.js',
-  './js/dice-animation.js',
-  './js/dice-tab.js',
-  './js/dice.js',
-  './js/haptics.js',
-  './js/modal.js',
-  './js/random.js',
-  './js/stats.js',
-  './js/storage.js',
-  './js/theme.js',
-  './js/tooltip.js',
-  './js/ui-controller.js',
-  './js/verse-modal.js',
-  './js/verses.js',
-  './js/wheel-batch.js',
-  './js/wheel-tab.js',
-  './js/wheel.js',
-  './assets/favicon.svg',
-  './assets/logo.svg',
-  './assets/spin-wordmark.svg',
-  './assets/wordmark.svg',
-  './assets/icons/icon-192.png',
-  './assets/icons/icon-512.png'
+  "./",
+  "./index.html",
+  "./manifest.json",
+  "./css/styles.css",
+  "./js/app.js",
+  "./js/audio.js",
+  "./js/celebration.js",
+  "./js/dice-animation.js",
+  "./js/dice-tab.js",
+  "./js/dice.js",
+  "./js/haptics.js",
+  "./js/modal.js",
+  "./js/random.js",
+  "./js/stats.js",
+  "./js/storage.js",
+  "./js/theme.js",
+  "./js/tooltip.js",
+  "./js/ui-controller.js",
+  "./js/verse-modal.js",
+  "./js/verses.js",
+  "./js/wheel-batch.js",
+  "./js/wheel-tab.js",
+  "./js/wheel.js",
+  "./assets/favicon.svg",
+  "./assets/logo.svg",
+  "./assets/spin-wordmark.svg",
+  "./assets/wordmark.svg",
+  "./assets/icons/icon-192.png",
+  "./assets/icons/icon-512.png",
+  "./js/app.js?v=19",
+  "./js/audio.js?v=3",
+  "./js/modal.js?v=2",
+  "./js/ui-controller.js?v=3",
+  "./js/wheel-tab.js?v=14",
+  "./js/dice-tab.js?v=8",
+  "./js/verse-modal.js?v=2",
+  "./js/stats.js?v=2",
+  "./js/dice.js?v=6",
+  "./js/random.js?v=2",
+  "./js/dice-animation.js?v=4",
+  "./js/wheel.js?v=11",
+  "./js/wheel-batch.js?v=4"
 ];
 
 self.addEventListener('install', (event) => {
@@ -46,7 +59,7 @@ self.addEventListener('install', (event) => {
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((keys) =>
-      Promise.all(keys.filter((k) => k !== STATIC_CACHE && k !== RUNTIME_CACHE).map((k) => caches.delete(k)))
+      Promise.all(keys.filter((k) => (k.startsWith('pick:static:') || k.startsWith('pick:runtime:')) && k !== STATIC_CACHE && k !== RUNTIME_CACHE).map((k) => caches.delete(k)))
     ).then(() => self.clients.claim())
   );
 });

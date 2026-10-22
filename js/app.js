@@ -2,11 +2,11 @@ import { initTheme } from './theme.js';
 import { loadJSON, KEYS } from './storage.js';
 import { MotionAudio } from './audio.js?v=3';
 import { Haptics } from './haptics.js';
-import { initModalDismissal } from './modal.js';
+import { initModalDismissal } from './modal.js?v=2';
 import { initPrimaryTabs, initSoundControl } from './ui-controller.js?v=3';
-import { initWheelTab } from './wheel-tab.js?v=13';
-import { initDiceTab } from './dice-tab.js?v=7';
-import { initVerseModal } from './verse-modal.js';
+import { initWheelTab } from './wheel-tab.js?v=14';
+import { initDiceTab } from './dice-tab.js?v=8';
+import { initVerseModal } from './verse-modal.js?v=2';
 import { initTooltips } from './tooltip.js';
 
 initTheme();

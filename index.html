@@ -142,6 +142,7 @@
           </div>
 
           <button id="spinBtn" class="btn btn-primary btn-large" type="button">SPIN</button>
+          <button id="backToWheel" class="btn btn-ghost" type="button" hidden>← Reset to regular mode</button>
           <div id="wheelResult" class="result" aria-live="polite"></div>
 
           <details class="batch-controls">
@@ -162,7 +163,6 @@
               </label>
               <button id="runFastBatch" class="btn btn-secondary" type="button">Run instant</button>
             </div>
-            <button id="backToWheel" class="btn btn-ghost" type="button" hidden>← Back to wheel</button>
             </div>
           </details>
         </div>
@@ -252,12 +252,12 @@
     <span>Made with <button id="easterEggBtn" class="footer-heart" type="button" aria-label="Open a Bible verse" data-tooltip="Open a Bible verse">♥</button> by Venkatesh</span>
   </footer>
 
-  <div id="verseModal" class="modal" hidden>
-    <div class="modal-content verse-modal-content">
+  <div id="verseModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="verseModalTitle" hidden>
+    <div tabindex="-1" class="modal-content verse-modal-content">
       <div class="verse-modal-header">
         <div>
           <span class="eyebrow">A quiet moment</span>
-          <h2>A verse for right now</h2>
+          <h2 id="verseModalTitle">A verse for right now</h2>
         </div>
         <button id="verseClose" class="icon-btn modal-close" type="button" aria-label="Close" data-tooltip="Close" data-close-modal>
           <svg class="icon" aria-hidden="true"><use href="#icon-x"></use></svg>
@@ -281,10 +281,10 @@
     </div>
   </div>
 
-  <div id="catanAnalyticsModal" class="modal" hidden>
-    <div class="modal-content modal-content-wide">
+  <div id="catanAnalyticsModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="catanAnalyticsTitle" hidden>
+    <div tabindex="-1" class="modal-content modal-content-wide">
       <div class="modal-header">
-        <h2>Catan Analytics</h2>
+        <h2 id="catanAnalyticsTitle">Catan Analytics</h2>
         <button id="catanAnalyticsClose" class="icon-btn modal-close" type="button" aria-label="Close analytics" data-tooltip="Close analytics" data-close-modal>
           <svg class="icon" aria-hidden="true"><use href="#icon-x"></use></svg>
         </button>
@@ -298,10 +298,10 @@
     </div>
   </div>
 
-  <div id="catanSettlementModal" class="modal" hidden>
-    <div class="modal-content settlement-modal-content">
+  <div id="catanSettlementModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="catanSettlementTitle" data-dismissible="false" hidden>
+    <div tabindex="-1" class="modal-content settlement-modal-content">
       <div class="modal-header">
-        <h2>Place settlements</h2>
+        <h2 id="catanSettlementTitle">Place settlements</h2>
       </div>
       <p id="catanSettlementRoundLabel" class="eyebrow"></p>
       <div id="catanSettlementPlayer" class="settlement-player"></div>
@@ -319,6 +319,6 @@
     <symbol id="icon-x" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></symbol>
   </svg>
 
-  <script type="module" src="js/app.js?v=18"></script>
+  <script type="module" src="js/app.js?v=19"></script>
 </body>
 </html>

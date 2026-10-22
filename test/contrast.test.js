@@ -1,5 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
+import { contrastTextColor } from '../js/wheel.js';
 import { readFileSync } from 'node:fs';
 
 const css = readFileSync(new URL('../css/styles.css', import.meta.url), 'utf8');
@@ -48,4 +49,9 @@ for (const [name, selector] of [['light', ':root'], ['dark', "[data-theme='dark'
 
 test('physical dice retain maximum practical contrast in every theme', () => {
   assert.ok(contrastRatio('#111827', '#ffffff') >= 15);
+});
+test('all default wheel labels meet normal-text AA contrast', () => {
+  for (const color of ['#ef4444', '#f59e0b', '#10b981', '#3b82f6', '#8b5cf6', '#ec4899']) {
+    assert.ok(contrastRatio(contrastTextColor(color), color) >= 4.5, color);
+  }
 });

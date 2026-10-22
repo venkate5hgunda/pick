@@ -20,5 +20,5 @@ Theming, accessibility commitments and the hidden verse easter egg.
 - Responsive layouts for phone, tablet, laptop, and wide desktop without horizontal overflow.
 - Keyboard-focus styles, semantic labels, live result regions, high-contrast wheel text, and `prefers-reduced-motion` support; reduced motion retains result feedback without confetti or ambient rotation.
 - Keep icon-only controls and interactive graphics simple while exposing concise hover/focus hints that mirror their accessible names.
-- Dialogs close from a persistent top-right control, the Escape key, or a click on the backdrop.
+- Dialogs move keyboard focus inside, keep Tab within the dialog, disable the background, and restore focus when closed. Dismissible dialogs close from a persistent top-right control, Escape, or a backdrop click. The required settlement-placement dialog stays open until placement advances or completes.
 - Static HTML, CSS, and JavaScript with no build step, accounts, cookies, API keys, or server-side state.

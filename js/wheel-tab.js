@@ -7,11 +7,11 @@ import {
   expandInputSets,
   getSegmentArcs,
   pickSegmentIndex,
-} from './wheel.js?v=10';
-import { WheelBatchOverlay } from './wheel-batch.js?v=3';
+} from './wheel.js?v=11';
+import { WheelBatchOverlay } from './wheel-batch.js?v=4';
 import { batchVolumeScale } from './audio.js';
 import { BatchResultOverlay, WheelCelebration, summarizeBatchResults } from './celebration.js';
-import { createTracker, record, reset as resetTracker, toRows, ResponsiveHistogram } from './stats.js';
+import { createTracker, record, reset as resetTracker, toRows, rowsToCSV, ResponsiveHistogram } from './stats.js?v=2';
 
 const PALETTE = ['#ef4444', '#f59e0b', '#10b981', '#3b82f6', '#8b5cf6', '#ec4899'];
 export const PRESETS = {
@@ -86,6 +86,7 @@ export function initWheelTab(motionAudio, haptics) {
   const batchOverlay = new WheelBatchOverlay({ stage, mainElement: spinSurface, pointer, grid: miniGrid, status: batchStatus });
   const histogram = new ResponsiveHistogram(statsCanvas);
   let spinning = false;
+  let activeRun = null;
   let idleTimer = null;
   let activityFrame = null;
 
@@ -124,6 +125,7 @@ export function initWheelTab(motionAudio, haptics) {
 
   function refreshWheel() {
     wheel.setSegments(visualSegments());
+    refreshStats();
   }
 
   function persistSegments() {
@@ -147,12 +149,31 @@ export function initWheelTab(motionAudio, haptics) {
     segments.forEach((segment, index) => {
       const row = document.createElement('div');
       row.className = 'segment-row';
-      row.innerHTML = `
-        <input type="color" value="${segment.color}" aria-label="Color for ${segment.label}" title="Change ${segment.label} color">
-        <input type="text" value="${segment.label}" aria-label="Label ${index + 1}">
-        <input class="segment-weight" type="number" min="1" step="1" inputmode="numeric" value="${segment.weight}" aria-label="Weight for ${segment.label}" title="Relative weight">
-        <button type="button" class="btn btn-ghost remove-segment" aria-label="Remove ${segment.label}" data-tooltip="Remove option">✕</button>`;
-      const [colorInput, textInput, weightInput, removeButton] = row.children;
+      const colorInput = document.createElement('input');
+      colorInput.type = 'color';
+      colorInput.value = segment.color;
+      colorInput.setAttribute('aria-label', `Color for ${segment.label}`);
+      colorInput.title = `Change ${segment.label} color`;
+      const textInput = document.createElement('input');
+      textInput.type = 'text';
+      textInput.value = segment.label;
+      textInput.setAttribute('aria-label', `Label ${index + 1}`);
+      const weightInput = document.createElement('input');
+      weightInput.className = 'segment-weight';
+      weightInput.type = 'number';
+      weightInput.min = '1';
+      weightInput.step = '1';
+      weightInput.inputMode = 'numeric';
+      weightInput.value = String(segment.weight);
+      weightInput.setAttribute('aria-label', `Weight for ${segment.label}`);
+      weightInput.title = 'Relative weight';
+      const removeButton = document.createElement('button');
+      removeButton.type = 'button';
+      removeButton.className = 'btn btn-ghost remove-segment';
+      removeButton.textContent = '✕';
+      removeButton.setAttribute('aria-label', `Remove ${segment.label}`);
+      removeButton.dataset.tooltip = 'Remove option';
+      row.append(colorInput, textInput, weightInput, removeButton);
       colorInput.addEventListener('input', () => {
         segment.color = colorInput.value;
         persistSegments();
@@ -187,9 +208,17 @@ export function initWheelTab(motionAudio, haptics) {
   function refreshStats() {
     const rows = toRows(tracker, segments.map((segment) => segment.label));
     histogram.render(rows);
-    statsTable.innerHTML = rows
-      .map((row) => `<div class="stats-row"><span>${row.label}</span><span>${row.count} (${row.percent.toFixed(1)}%)</span></div>`)
-      .join('') || '<p class="muted">No spins yet.</p>';
+    statsTable.replaceChildren();
+    rows.forEach((row) => {
+      const item = document.createElement('div');
+      item.className = 'stats-row';
+      const label = document.createElement('span');
+      label.textContent = row.label;
+      const value = document.createElement('span');
+      value.textContent = `${row.count} (${row.percent.toFixed(1)}%)`;
+      item.append(label, value);
+      statsTable.appendChild(item);
+    });
   }
 
   addButton.addEventListener('click', () => {
@@ -233,85 +262,129 @@ export function initWheelTab(motionAudio, haptics) {
     syncPresetSelect();
   });
 
-  async function spinWheel() {
-    if (spinning) return;
-    spinning = true;
+  function setBusy(busy) {
+    spinning = busy;
+    [spinButton, spinSurface, runAnimatedButton, runFastButton, addButton, presetSelect, inputSetSelect, weightToggle,
+      ...editor.querySelectorAll('input, button')].forEach((control) => { control.disabled = busy; });
+  }
+
+  function beginRun() {
+    const run = new AbortController();
+    activeRun = run;
+    setBusy(true);
     pauseIdleRotation();
-    spinButton.disabled = true;
-    spinSurface.disabled = true;
-    result.textContent = '';
+    return run;
+  }
+
+  function finishRun(run) {
+    if (activeRun !== run) return;
+    activeRun = null;
+    setBusy(false);
+    armIdleRotation();
+  }
+
+  function restoreRegularMode() {
+    activeRun?.abort();
+    activeRun = null;
+    setBusy(false);
+    batchResultOverlay.hide();
     celebration.hide();
-    const sourceIndex = pickSegmentIndex(effectiveSegments());
-    const targetIndex = (Math.floor(Math.random() * inputSetCount) * segments.length) + sourceIndex;
-    const boundaries = getSegmentArcs(visualSegments()).map((arc) => arc.start);
-    await motionAudio.beginWheel();
-    wheel.spinTo(targetIndex, SINGLE_SPIN_DURATION_MS, () => {
-      const label = segments[sourceIndex].label;
-      result.textContent = `Selected: ${label}`;
-      celebration.show(label, segments[sourceIndex].color);
-      record(tracker, label);
+    batchOverlay.hide();
+    backButton.hidden = true;
+    armIdleRotation();
+  }
+
+  async function spinWheel() {
+    if (activeRun) return;
+    restoreRegularMode();
+    const run = beginRun();
+    const options = effectiveSegments();
+    const slices = expandInputSets(options, inputSetCount);
+    result.textContent = '';
+    try {
+      const sourceIndex = pickSegmentIndex(options);
+      const targetIndex = Math.floor(Math.random() * inputSetCount) * options.length + sourceIndex;
+      const boundaries = getSegmentArcs(slices).map((arc) => arc.start);
+      await motionAudio.beginWheel();
+      if (run.signal.aborted) return;
+      const completed = await wheel.spinTo(targetIndex, SINGLE_SPIN_DURATION_MS, null, {
+        signal: run.signal,
+        onFrame: ({ rotation, velocity }) => motionAudio.syncWheel(rotation, velocity, boundaries),
+      });
+      if (!completed || run.signal.aborted) return;
+      const selected = options[sourceIndex];
+      result.textContent = `Selected: ${selected.label}`;
+      celebration.show(selected.label, selected.color);
+      record(tracker, selected.label);
       persistStats();
       refreshStats();
-      spinning = false;
-      spinButton.disabled = false;
-      spinSurface.disabled = false;
       motionAudio.finish();
       haptics?.impact(0.6);
-      armIdleRotation();
-    }, { onFrame: ({ rotation, velocity }) => motionAudio.syncWheel(rotation, velocity, boundaries) });
+    } catch (error) {
+      result.textContent = 'The spin could not finish. Please try again.';
+      console.error('Wheel spin failed:', error);
+    } finally {
+      finishRun(run);
+    }
   }
 
   spinButton.addEventListener('click', spinWheel);
   spinSurface.addEventListener('click', spinWheel);
-  spinAgainButton.addEventListener('click', () => {
-    celebration.hide();
-    spinWheel();
-  });
+  spinAgainButton.addEventListener('click', spinWheel);
 
   runAnimatedButton.addEventListener('click', async () => {
+    if (activeRun) return;
+    restoreRegularMode();
+    const run = beginRun();
     const count = Math.min(12, Math.max(2, parseInt(animatedCountInput.value, 10) || 2));
     animatedCountInput.value = count;
     backButton.hidden = false;
-    runAnimatedButton.disabled = true;
-    batchResultOverlay.hide();
-    pauseIdleRotation();
-    await motionAudio.beginWheel();
     const batchSegments = visualSegments();
-    const boundaries = getSegmentArcs(batchSegments).map((arc) => arc.start);
-    const volumeScales = Array.from({ length: count }, () => batchVolumeScale(count));
-    const results = await batchOverlay.run(batchSegments, count, {
-      onMotion: ({ rotation, velocity, wheelIndex }) =>
-        motionAudio.syncWheel(rotation, velocity, boundaries, volumeScales[wheelIndex], `batch-${wheelIndex}`),
-    });
-    motionAudio.finish();
-    results.forEach((index) => record(tracker, visualSegments()[index].label));
-    batchResultOverlay.show(summarizeBatchResults(results, batchSegments), 'Animated batch');
-    persistStats();
-    refreshStats();
-    runAnimatedButton.disabled = false;
+    try {
+      await motionAudio.beginWheel();
+      if (run.signal.aborted) return;
+      const boundaries = getSegmentArcs(batchSegments).map((arc) => arc.start);
+      const volumeScales = Array.from({ length: count }, () => batchVolumeScale(count));
+      const results = await batchOverlay.run(batchSegments, count, {
+        signal: run.signal,
+        onMotion: ({ rotation, velocity, wheelIndex }) =>
+          motionAudio.syncWheel(rotation, velocity, boundaries, volumeScales[wheelIndex], `batch-${wheelIndex}`),
+      });
+      if (!results || run.signal.aborted) return;
+      motionAudio.finish();
+      results.forEach((index) => record(tracker, batchSegments[index].label));
+      batchResultOverlay.show(summarizeBatchResults(results, batchSegments), 'Animated batch');
+      persistStats();
+      refreshStats();
+    } catch (error) {
+      batchOverlay.hide();
+      backButton.hidden = true;
+      result.textContent = 'The batch could not finish. Please try again.';
+      console.error('Wheel batch failed:', error);
+    } finally {
+      finishRun(run);
+    }
   });
 
   runFastButton.addEventListener('click', () => {
+    if (activeRun) return;
+    restoreRegularMode();
     const count = Math.min(10000, Math.max(13, parseInt(fastCountInput.value, 10) || 13));
     fastCountInput.value = count;
+    const options = effectiveSegments();
     const results = [];
     for (let index = 0; index < count; index += 1) {
-      const segmentIndex = pickSegmentIndex(effectiveSegments());
+      const segmentIndex = pickSegmentIndex(options);
       results.push(segmentIndex);
-      record(tracker, segments[segmentIndex].label);
+      record(tracker, options[segmentIndex].label);
     }
     persistStats();
     refreshStats();
-    celebration.hide();
-    batchResultOverlay.show(summarizeBatchResults(results, segments), 'Instant batch');
+    backButton.hidden = false;
+    batchResultOverlay.show(summarizeBatchResults(results, options), 'Instant batch');
   });
 
-  backButton.addEventListener('click', () => {
-    batchResultOverlay.hide();
-    batchOverlay.hide();
-    backButton.hidden = true;
-    armIdleRotation();
-  });
+  backButton.addEventListener('click', restoreRegularMode);
   resetStatsButton.addEventListener('click', () => {
     resetTracker(tracker);
     persistStats();
@@ -319,7 +392,7 @@ export function initWheelTab(motionAudio, haptics) {
   });
   exportStatsButton.addEventListener('click', () => {
     const rows = toRows(tracker, segments.map((segment) => segment.label));
-    const csv = ['label,count,percent', ...rows.map((row) => `${row.label},${row.count},${row.percent.toFixed(2)}`)].join('\n');
+    const csv = rowsToCSV(rows);
     const blob = new Blob([csv], { type: 'text/csv' });
     const anchor = document.createElement('a');
     anchor.href = URL.createObjectURL(blob);

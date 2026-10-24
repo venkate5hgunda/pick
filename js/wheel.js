@@ -93,33 +93,19 @@ export class Wheel {
   draw() {
     const { canvas, ctx, segments, rotation } = this;
     const dpr = window.devicePixelRatio || 1;
-    // Chromium on iPadOS has been observed to round a canvas's clientWidth and
-    // clientHeight to slightly different integer CSS pixels even when the
-    // parent box is a perfect square (aspect-ratio: 1) — Safari/WebKit do not
-    // show this. That 1px-or-so mismatch stretches the (always literally
-    // square) bitmap non-uniformly, reading as a subtly distorted, off-center
-    // wheel. getBoundingClientRect() gives the true, sub-pixel box for both
-    // axes read at the same instant, and pinning the element's own CSS width/
-    // height to that exact matching value (rather than leaving it as a
-    // percentage of a possibly-unequal parent box) keeps the rendered square
-    // truly square and centered no matter how the parent rounds.
+    // CSS owns the display size; only resize the bitmap here. Pinning the
+    // canvas to its first measured CSS size traps it at a small initial box
+    // and prevents it from filling the enclosure after layout or rotation.
     const rect = canvas.getBoundingClientRect();
-    const measured = Math.floor(Math.min(rect.width, rect.height));
-    // While the Wheel tab (or its ancestor) is hidden — `display: none` via
-    // the `hidden` attribute — the canvas has no box at all, so this reads
-    // as 0x0. Previously that fell through to a forced 1px square (`r` went
-    // negative, crashing `ctx.arc` and, worse, permanently pinning the
-    // canvas's inline style to 1px). Bail out instead and leave whatever was
-    // last drawn alone; switching back to the tab triggers a fresh draw()
-    // once the box has real dimensions again (see the ResizeObserver in
-    // wheel-tab.js and the explicit tab-activation redraw hook).
-    if (measured < 16) return;
-    const size = measured;
-    canvas.style.width = `${size}px`;
-    canvas.style.height = `${size}px`;
-    canvas.width = size * dpr;
-    canvas.height = size * dpr;
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const size = Math.min(rect.width, rect.height);
+    // Hidden tabs have no layout box. Leave their last drawing intact until
+    // the resize observer or tab-activation hook redraws the visible canvas.
+    if (size < 16) return;
+    const pixels = Math.round(size * dpr);
+    canvas.width = pixels;
+    canvas.height = pixels;
+    const scale = pixels / size;
+    ctx.setTransform(scale, 0, 0, scale, 0, 0);
     ctx.clearRect(0, 0, size, size);
 
     const cx = size / 2;

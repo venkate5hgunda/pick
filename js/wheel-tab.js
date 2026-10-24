@@ -7,8 +7,8 @@ import {
   expandInputSets,
   getSegmentArcs,
   pickSegmentIndex,
-} from './wheel.js?v=11';
-import { WheelBatchOverlay } from './wheel-batch.js?v=4';
+} from './wheel.js?v=12';
+import { WheelBatchOverlay } from './wheel-batch.js?v=5';
 import { batchVolumeScale } from './audio.js';
 import { BatchResultOverlay, WheelCelebration, summarizeBatchResults } from './celebration.js';
 import { createTracker, record, reset as resetTracker, toRows, rowsToCSV, ResponsiveHistogram } from './stats.js?v=2';
@@ -401,41 +401,11 @@ export function initWheelTab(motionAudio, haptics) {
     URL.revokeObjectURL(anchor.href);
   });
 
-  // The decorative circular border/shadow (`.wheel-stage::before`/`::after`)
-  // is sized as a percentage of `.wheel-stage`'s own box, while the canvas
-  // (inside it) is independently pinned to an exact square by Wheel.draw().
-  // Relying on CSS `aspect-ratio: 1` alone for `.wheel-stage` is subject to
-  // the same per-axis clientWidth/clientHeight rounding quirks that caused
-  // the earlier canvas-distortion bug — so the stage box and the canvas
-  // square could each round to a *different* "square", making the ring
-  // border and the wheel disc mismatch in size/shape. Pin `.wheel-stage`
-  // itself to a measured, guaranteed-equal width/height so every descendant
-  // (border pseudo-elements and canvas alike) shares the exact same square.
-  function syncStageSquare() {
-    // Clear any previous pin first so the natural CSS sizing (width: 100%,
-    // aspect-ratio: 1, max-width) can respond to the current viewport size
-    // before we measure and re-pin — otherwise a stale pinned px value would
-    // prevent the stage from ever shrinking again on a narrower viewport.
-    stage.style.width = '';
-    stage.style.height = '';
-    const rect = stage.getBoundingClientRect();
-    const size = Math.floor(Math.min(rect.width, rect.height));
-    if (size < 16) return false; // hidden tab / not laid out yet
-    stage.style.width = `${size}px`;
-    stage.style.height = `${size}px`;
-    return true;
-  }
-
-  new ResizeObserver(() => {
-    syncStageSquare();
-    wheel.draw();
-  }).observe(stage);
-  // Belt-and-suspenders: force a redraw as soon as this tab panel is shown
-  // again, rather than relying solely on the ResizeObserver noticing the
-  // hidden -> visible size change (draw() itself now also skips no-op work
-  // while the panel is hidden, see wheel.js).
+  // The stage and canvas stay responsive in CSS. Observe the actual drawing
+  // box so first layout, viewport changes and tab restoration all repaint
+  // at the current size without freezing either element's dimensions.
+  new ResizeObserver(() => wheel.draw()).observe(canvas);
   document.getElementById('tab-wheel')?.addEventListener('tab:shown', () => {
-    syncStageSquare();
     wheel.draw();
   });
   ['pointerdown', 'pointermove', 'keydown', 'wheel', 'scroll', 'touchstart'].forEach((eventName) => {
@@ -447,7 +417,6 @@ export function initWheelTab(motionAudio, haptics) {
   });
   renderEditor();
   syncPresetSelect();
-  syncStageSquare();
   wheel.draw();
   armIdleRotation();
   refreshStats();

@@ -7,7 +7,7 @@ import { expandInputSets, getSegmentArcs } from '../js/wheel.js';
 import { KEYS } from '../js/storage.js';
 
 function setup(labels = ['Yes', 'No']) {
-  const state = { recorded: [], batchShows: 0, html: [], wheelTarget: 0 };
+  const state = { recorded: [], batchShows: 0, html: [], wheelTarget: 0, draws: 0, observed: [] };
   class Element {
     constructor(tag = 'div') {
       this.tag = tag;
@@ -42,7 +42,10 @@ function setup(labels = ['Yes', 'No']) {
     document: { hidden: false, getElementById: get, createElement: (tag) => new Element(tag), addEventListener() {} },
     window: { setTimeout: () => 1 }, clearTimeout() {}, requestAnimationFrame: () => 1,
     console: { error() {} }, AbortController,
-    ResizeObserver: class { observe() {} },
+    ResizeObserver: class {
+      constructor(callback) { state.resize = callback; }
+      observe(element) { state.observed.push(element); }
+    },
     KEYS,
     loadJSON: (key, fallback) => key === KEYS.WHEEL_SEGMENTS
       ? labels.map((label) => ({ label, color: '#ef4444', weight: 1 }))
@@ -51,7 +54,7 @@ function setup(labels = ['Yes', 'No']) {
     IDLE_ROTATION_DELAY_MS: 120000, IDLE_ROTATION_SPEED: 0.02, SINGLE_SPIN_DURATION_MS: 7000,
     Wheel: class {
       setSegments() {}
-      draw() {}
+      draw() { state.draws += 1; }
       stopIdleRotation() {}
       spinTo(index, duration, callback, { signal }) {
         return new Promise((resolve) => {
@@ -93,6 +96,16 @@ async function startAnimated(harness) {
   await Promise.resolve();
   return { pending };
 }
+
+test('wheel redraws its responsive canvas on resize and tab restoration without pinning the stage', async () => {
+  const h = setup();
+  assert.deepEqual(h.state.observed, [h.get('wheelCanvas')]);
+  const initialDraws = h.state.draws;
+  h.state.resize();
+  await h.get('tab-wheel').fire('tab:shown');
+  assert.equal(h.state.draws, initialDraws + 2);
+  assert.deepEqual(h.get('wheelStage').style, {});
+});
 
 test('spin locks all mutable options and records its starting snapshot', async () => {
   const h = setup(['Pizza', 'Sushi', 'Tacos']);

@@ -59,6 +59,8 @@ test('first offline reload can load the actual entry point and every imported mo
   const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
   const entry = html.match(/<script type="module" src="([^"]+)"/)[1];
   assert.equal((await worker.request('./' + entry)).ok, true);
+  const stylesheet = html.match(/<link rel="stylesheet" href="([^"]+)"/)[1];
+  assert.equal((await worker.request('./' + stylesheet)).ok, true);
   // Check the real URLs, including query strings, used by every production module.
   const { readdirSync } = await import('node:fs');
   for (const file of readdirSync(new URL('../js/', import.meta.url))) {

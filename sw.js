@@ -2,7 +2,7 @@
 // KISS: a single static cache plus a generic runtime cache for same-origin
 // fetches. Network-first for navigations so the latest shell loads.
 
-const STATIC_CACHE = 'pick:static:v5';
+const STATIC_CACHE = 'pick:static:v6';
 const RUNTIME_CACHE = 'pick:runtime:v3';
 
 const STATIC_ASSETS = [
@@ -10,6 +10,7 @@ const STATIC_ASSETS = [
   "./index.html",
   "./manifest.json",
   "./css/styles.css",
+  "./css/styles.css?v=2",
   "./js/app.js",
   "./js/audio.js",
   "./js/celebration.js",
@@ -35,19 +36,19 @@ const STATIC_ASSETS = [
   "./assets/wordmark.svg",
   "./assets/icons/icon-192.png",
   "./assets/icons/icon-512.png",
-  "./js/app.js?v=19",
+  "./js/app.js?v=20",
   "./js/audio.js?v=3",
   "./js/modal.js?v=2",
   "./js/ui-controller.js?v=3",
-  "./js/wheel-tab.js?v=14",
+  "./js/wheel-tab.js?v=15",
   "./js/dice-tab.js?v=8",
   "./js/verse-modal.js?v=2",
   "./js/stats.js?v=2",
   "./js/dice.js?v=6",
   "./js/random.js?v=2",
   "./js/dice-animation.js?v=4",
-  "./js/wheel.js?v=11",
-  "./js/wheel-batch.js?v=4"
+  "./js/wheel.js?v=12",
+  "./js/wheel-batch.js?v=5"
 ];
 
 self.addEventListener('install', (event) => {

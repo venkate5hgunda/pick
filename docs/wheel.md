@@ -5,6 +5,7 @@ Everything the wheel does: options, weights, presets, spin physics and sound.
 [← Back to the README](../README.md)
 
 - Fresh sessions open with a Yes/No wheel displayed as five repeated input sets (ten visual slices).
+- The wheel fills its circular enclosure on first load and stays centered and square when resizing, rotating a device, or returning from Dice. CSS controls the layout; the canvas bitmap follows that size at the display's pixel density.
 - Choose one to five input sets to repeat a short option list without changing its underlying odds.
 - Add and remove options, edit labels, and choose colors with compact field labels for clarity.
 - Keep equal odds by default, or reveal optional integer weights with a persistent Weighted toggle; weight fields allow free mobile editing and validate only when focus leaves, reverting invalid drafts to `1`.

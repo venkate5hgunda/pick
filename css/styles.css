@@ -590,9 +590,9 @@ main { flex: 1; width: 100%; max-width: 1180px; margin: 0 auto; padding: 1.25rem
 }
 
 .wheel-stage {
+  --wheel-inset: clamp(10px, 2vw, 18px);
   isolation: isolate;
   max-width: 470px;
-  padding: clamp(10px, 2vw, 18px);
 }
 
 .wheel-stage::before {
@@ -620,18 +620,31 @@ main { flex: 1; width: 100%; max-width: 1180px; margin: 0 auto; padding: 1.25rem
 .wheel-stage.is-batch-mode::after { display: none; }
 
 .wheel-spin-surface {
+  /* Share the stage's square from the first layout. Canvas bitmap dimensions
+     must never contribute an intrinsic size to the stage or this button. */
+  position: absolute;
+  inset: var(--wheel-inset);
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 100%;
-  height: 100%;
+  width: auto;
+  height: auto;
+  min-width: 0;
+  min-height: 0;
   padding: 0;
   border: 0;
   background: transparent;
   cursor: pointer;
 }
 .wheel-spin-surface:disabled { cursor: wait; opacity: 1; }
-.wheel-canvas { width: 100%; height: 100%; pointer-events: none; filter: drop-shadow(0 5px 4px rgba(23, 32, 54, .18)); }
+.wheel-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  filter: drop-shadow(0 5px 4px rgba(23, 32, 54, .18));
+}
 
 .wheel-confetti {
   position: absolute;

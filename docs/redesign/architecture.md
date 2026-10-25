@@ -31,7 +31,7 @@ Randomness, time and identifiers are injected into pure rules so tests can repla
 
 ## Routes and composition
 
-Target product surfaces: Wheel, Statistics, Dice, Catan, verse dialog, preferences. Foundation routes are `/` and `/requirements/:id` within the URL hash. Unknown feature routes provide recovery; route changes focus the heading. Catalog search and category buttons are accessible native controls. The browser tests cover actual built navigation and data rendering.
+Target product surfaces: Wheel, Statistics, Dice, Catan, verse dialog, preferences. Product routes use the URL hash. The internal parity roadmap remains available only by directly entering `/#/roadmap`; no playable-UI control links to it. Its requirement detail routes remain internal evidence surfaces. Unknown routes provide recovery, route changes focus the heading, and browser tests cover direct-address rendering.
 
 ## Svelte boundaries
 

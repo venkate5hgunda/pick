@@ -19,13 +19,13 @@ Verified on 2026-10-25 against the source baseline recorded in [the inventory](p
 | Root JavaScript baseline suite | 84/84 passed at the foundation baseline; rerun before parity sign-off |
 | Desktop and mobile captures | Generated from production build and visually inspected |
 
-Browser coverage edits and restores options, validates integer weight drafts, changes visual repeats, exercises presets and custom-state recovery, spins through the real result dialog, checks keyboard use and reduced motion, verifies responsive canvas geometry, traverses the roadmap, and asserts no external requests. This is implementation evidence for P01/P02, not complete parity sign-off.
+Browser coverage edits and restores options, validates integer weight drafts, changes visual repeats, exercises presets and custom-state recovery, spins through the real result dialog, checks keyboard use and reduced motion, verifies responsive canvas geometry, proves the main UI has no roadmap or requirement links, directly addresses the internal roadmap, and asserts no external requests. This is implementation evidence for P01/P02, not complete parity sign-off.
 
 Commands: `npm --prefix redesign run build`, `npm --prefix redesign test`, `npm --prefix redesign run check:format`, `npm --prefix redesign run test:browser`, `npm --prefix redesign run capture`. Browser tests use the built preview; baseline JavaScript tests use the existing root runner. Dependencies are exact-pinned with package-local locks.
 
 ## Trace findings and fixes
 
-The trace covered the original wheel entry points, presets, option identity, input-set expansion, weight validation, cryptographic selection, animation/result ownership, persistence boundaries, canvas resizing, responsive layout, roadmap consumers, documentation, capture script and browser checks.
+The trace covered the original wheel entry points, presets, option identity, input-set expansion, weight validation, cryptographic selection, animation/result ownership, persistence boundaries, canvas resizing, responsive layout, every roadmap-link consumer, documentation, capture script and browser checks. The header, Dice, Stats and footer entry points were removed together; the direct route and its internal detail links remain intentionally available.
 
 The browser trace caught three issues before sign-off: ambiguous option-row test selectors, a mobile-only hidden count assertion, and insufficient text contrast on the coral action color. The implementation now uses exact semantic selectors, asserts mobile-visible outcomes, and uses an AA-passing darker coral. The capture trace then exposed a blank first-frame WebKit canvas: the renderer now performs an initial layout measurement in addition to observing resizes, and both the browser suite and capture script require a painted canvas pixel. This was a missed lifecycle-to-capture trace, corrected before handoff. The capture script also still waited for the retired catalog home; tracing its consumer surfaced and corrected that stale assumption.
 

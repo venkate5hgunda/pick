@@ -200,10 +200,6 @@
 <div class:dark-preview={darkPreview} class="app-shell">
   <header class="site-header">
     <a class="brand" href="#/" aria-label="Pick home">Pick<span>✦</span></a>
-    <nav aria-label="Primary navigation">
-      <a class:active={route === '' || route === '/'} href="#/">Play</a>
-      <a class:active={route === '/roadmap'} href="#/roadmap">Roadmap</a>
-    </nav>
     <button
       class="icon-button"
       type="button"
@@ -224,14 +220,14 @@
           <span class="tab-icon wheel-mark" aria-hidden="true"></span>
           <span><strong>Wheel</strong><small>Make a decision</small></span>
         </button>
-        <a class="product-tab" href="#/roadmap">
+        <div class="product-tab unavailable" aria-disabled="true">
           <Icon icon={diceMultiple} width="25" />
           <span><strong>Dice</strong><small>Coming next</small></span>
-        </a>
-        <a class="product-tab compact" href="#/roadmap">
+        </div>
+        <div class="product-tab compact unavailable" aria-disabled="true">
           <Icon icon={chartBar} width="23" />
           <span><strong>Stats</strong><small>Planned</small></span>
-        </a>
+        </div>
       </div>
 
       {#if storageMessage}<p class="storage-message" role="status">
@@ -492,9 +488,7 @@
   </main>
 
   <footer>
-    <span>Pick is private by design. Your choices stay on this device.</span><a
-      href="#/roadmap">See the redesign roadmap</a
-    >
+    <span>Pick is private by design. Your choices stay on this device.</span>
   </footer>
 </div>
 

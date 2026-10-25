@@ -17,7 +17,7 @@ Focused evidence was not split into a second crop because the combined mobile fr
 
 ## Comparison history
 
-- Initial browser review found the coral action token at 3.72:1 and a mobile route discoverability gap. The accent was darkened to `#c63f2b`, and the Play/Roadmap navigation remains visible at mobile widths.
+- Initial browser review found the coral action token at 3.72:1 and a mobile route discoverability gap. The accent was darkened to `#c63f2b`. The later explicit product decision supersedes route discoverability: the internal roadmap is now intentionally direct-address only and absent from the playable UI.
 - The first production mobile capture exposed a blank first-frame WebKit canvas. The renderer now measures on first animation frame and after fonts load, while resize observation handles later changes; capture and browser checks require a non-transparent canvas pixel.
 - Post-fix evidence: `../docs/images/redesign-comparison-mobile.png`; automated WCAG checks report no violations on the wheel, result dialog, roadmap or detail routes.
 

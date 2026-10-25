@@ -95,7 +95,7 @@ a {
 .site-header {
   height: 82px;
   display: grid;
-  grid-template-columns: 1fr auto 1fr;
+  grid-template-columns: 1fr auto;
   align-items: center;
   border-bottom: 1px solid var(--line);
 }
@@ -109,26 +109,6 @@ a {
 }
 .brand span {
   color: var(--accent);
-}
-.site-header nav {
-  display: flex;
-  gap: 7px;
-  padding: 5px;
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  background: var(--surface);
-}
-.site-header nav a {
-  padding: 7px 17px;
-  border-radius: 999px;
-  text-decoration: none;
-  font-size: 13px;
-  font-weight: 800;
-  color: var(--muted);
-}
-.site-header nav a.active {
-  color: white;
-  background: var(--ink);
 }
 .icon-button {
   justify-self: end;
@@ -182,6 +162,12 @@ a {
 .product-tab.active strong,
 .product-tab.active small {
   color: white;
+}
+.product-tab.unavailable {
+  cursor: default;
+}
+.product-tab.unavailable small::after {
+  content: ' · unavailable';
 }
 .wheel-mark {
   width: 28px;
@@ -680,7 +666,7 @@ footer {
   min-height: 76px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   gap: 20px;
   border-top: 1px solid var(--line);
   color: var(--muted);
@@ -801,16 +787,8 @@ footer {
   }
   .site-header {
     height: 68px;
-    grid-template-columns: 1fr auto auto;
+    grid-template-columns: 1fr auto;
     gap: 8px;
-  }
-  .site-header nav {
-    gap: 2px;
-    padding: 3px;
-  }
-  .site-header nav a {
-    padding: 6px 9px;
-    font-size: 11px;
   }
   .brand {
     font-size: 27px;

@@ -22,17 +22,20 @@ Before first migrated write, capture representative old records, validate and ve
 
 ## Implementation sequence
 
-1. **Foundation (this branch):** source inventory, acceptance criteria, architecture, isolated package, typed shell, accessible feature explorer, browser checks and screenshots.
-2. **First complete feature:** Extract seeded probability and Catan transitions into typed domain modules, then deliver one complete wheel flow with save/resume and accessible results.
-3. **Expand in coherent groups:** implement the remaining feature families with current state/serialization fixtures and browser evidence. Maintain old routes through aliases where required. Update parity status and attach exact test paths and evidence commits.
-4. **PWA and recovery:** versioned storage migration, offline asset graph, scope-safe update handling, install/standalone testing, quota/private mode and multi-tab behavior.
-5. **Parity release:** execute every acceptance case and the full original regression suite; review documented corrections, data migration, artwork and real device behavior. No open blocker may be hidden behind an implemented status.
+1. **Foundation (complete):** source inventory, acceptance criteria, architecture, isolated package, accessible feature explorer, browser checks and baseline captures.
+2. **First complete feature (implemented):** P01/P02 wheel flow with editable options, presets, weighted selection, visual repeats, isolated local save/resume, responsive canvas and accessible results. The parity status remains `implemented`, not `verified`.
+3. **Next feature group:** P03 sound, boundary ticks, result celebration and ambient idle motion. Retain the seven-second weighted landing, add cancellation/lifecycle tests, and test reduced motion and muted audio.
+4. **Expand in coherent groups:** statistics, standard dice, Catan, verse discovery and accessibility preferences. Use current state/serialization fixtures and browser evidence. Keep each feature's status explicit.
+5. **PWA and recovery:** versioned storage migration, offline asset graph, scope-safe update handling, install/standalone testing, quota/private mode and multi-tab behavior.
+6. **Parity release:** execute every acceptance case and the full original regression suite; review documented corrections, data migration, artwork and real-device behavior. No open blocker may be hidden behind an implemented status.
 
 ## Branch and rollout policy
 
-Push this milestone to `codex/redesign-foundation`; do not merge or deploy it automatically. The dedicated workflow validates the new package on that branch and relevant pull requests. Existing app source, root package dependencies, production service workers and release flags are not changed by the foundation. Build output stays in ignored package-local cache; the lockfile is committed.
+Continue on `codex/redesign-foundation`; do not merge or deploy it automatically. The latest saved milestone is the first complete wheel feature. The redesign package remains separate from the production entry point and service worker. Build output stays in ignored package-local cache; its lockfile is committed.
 
 Use a separate preview origin during later implementation. Before replacing the public app, validate old-to-new storage fixtures, an explicit return/backup path, inbound URLs, service-worker update behavior and full feature parity. An old service worker can intercept new paths on the same origin, so preview isolation must be operational rather than a folder name alone.
+
+The parity roadmap is an internal diagnostic page at `/#/roadmap`. Per the product decision, it has no link in the playable UI and is reachable only when its exact URL is entered directly.
 
 ## Trace checklist for every migrated feature
 

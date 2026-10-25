@@ -2,7 +2,7 @@
 
 A new implementation of the existing product, grounded in its complete observable behavior.
 
-**Milestone 2 in progress: first complete feature.** The redesign now opens on a responsive, interactive decision wheel with editable options, presets, visual repeats, optional integer weights, local save/resume and an accessible result dialog. The original application remains the behavior reference; the roadmap keeps the remaining feature groups explicit.
+**Milestone 2 in progress: first complete feature.** The redesign now opens on a responsive, interactive decision wheel with editable options, presets, visual repeats, optional integer weights, local save/resume and an accessible result dialog. The original application remains the behavior reference; the internal roadmap at `/#/roadmap` keeps the remaining feature groups explicit without appearing in the playable UI.
 
 | Document | Purpose |
 | --- | --- |

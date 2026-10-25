@@ -106,10 +106,15 @@ test('presets restore useful slice counts and custom state shows Select', async 
   await expect(preset).toHaveValue('');
 });
 
-test('roadmap keeps the complete inventory reachable and filterable', async ({
+test('roadmap has no main-app entry point and remains direct-address only', async ({
   page,
 }) => {
-  await page.getByRole('link', { name: 'Roadmap', exact: true }).click();
+  await expect(page.locator('a[href="#/roadmap"]')).toHaveCount(0);
+  await expect(page.locator('a[href^="#/requirements/"]')).toHaveCount(0);
+  await expect(page.getByText('Dice', { exact: true })).not.toHaveRole('link');
+  await expect(page.getByText('Stats', { exact: true })).not.toHaveRole('link');
+
+  await page.goto('/#/roadmap');
   await expect(page.locator('.card')).toHaveCount(entries.length);
   const category = entries[0].category;
   await page.getByRole('button', { name: category, exact: true }).click();

@@ -1,0 +1,263 @@
+{
+  "schemaVersion": 1,
+  "app": "Pick",
+  "baselineCommit": "76f540473de7737badf6afb397b550b772578d96",
+  "milestone": "foundation",
+  "requirements": [
+    {
+      "id": "P01",
+      "title": "Decision wheel",
+      "category": "Wheel",
+      "status": "planned",
+      "sources": [
+        "js/wheel-tab.js",
+        "js/wheel.js",
+        "docs/wheel.md"
+      ],
+      "acceptance": [
+        "Fresh Yes/No wheel repeats five input sets, ten visible slices.",
+        "Edit labels and colors; add/remove options; repeat one to five input sets without changing semantic odds.",
+        "Yes/No, Maybe, coin, RPS, meals and player-order presets restore useful set counts; customized configurations display Select after reload."
+      ],
+      "baselineTests": [
+        "test/wheel.test.js",
+        "test/wheel-controller.test.js"
+      ]
+    },
+    {
+      "id": "P02",
+      "title": "Weighted selection",
+      "category": "Wheel",
+      "status": "planned",
+      "sources": [
+        "js/random.js",
+        "js/wheel.js",
+        "js/wheel-tab.js"
+      ],
+      "acceptance": [
+        "Equal odds by default; optional integer weights persist.",
+        "Mobile weight drafts remain editable; invalid blurred values revert to one.",
+        "Visual slice sizes communicate weighted probability; crypto selection determines the result independently of animation.",
+        "Repeated visual slices map back to the correct semantic result."
+      ],
+      "baselineTests": [
+        "test/random.test.js",
+        "test/wheel.test.js"
+      ]
+    },
+    {
+      "id": "P03",
+      "title": "Spin, sound and motion",
+      "category": "Wheel",
+      "status": "planned",
+      "sources": [
+        "js/wheel.js",
+        "js/audio.js",
+        "docs/wheel.md"
+      ],
+      "acceptance": [
+        "Seven-second decelerating spin lands at the exact selected segment center, including uneven weights.",
+        "Ticks follow every crossed boundary; colors remain saturated while controls lock.",
+        "Accessible result overlay offers dismissal and Spin again with contained celebration.",
+        "Ambient motion starts only after two visible idle minutes, stops on activity/departure, and takes 240 seconds per revolution.",
+        "Resize, first mount and returning from Dice keep a square centered high-DPI wheel."
+      ],
+      "baselineTests": [
+        "test/wheel-animation.test.js",
+        "test/wheel-rendering.test.js",
+        "test/audio.test.js"
+      ]
+    },
+    {
+      "id": "P04",
+      "title": "Animated batches",
+      "category": "Statistics",
+      "status": "planned",
+      "sources": [
+        "js/wheel-batch.js",
+        "js/wheel.js",
+        "docs/statistics.md"
+      ],
+      "acceptance": [
+        "Run 2\u201312 miniature wheels, independently settling in six to ten seconds inside the main footprint.",
+        "Lock options and run controls; reset cancels callbacks and records no partial batch.",
+        "Show counts, percentages and unique-dominant result after all wheels settle.",
+        "Return to regular mode preserves options and historical statistics; Spin can return and start a single spin.",
+        "Scale simultaneous tick volume by wheel count."
+      ],
+      "baselineTests": [
+        "test/wheel-controller.test.js",
+        "test/wheel.test.js"
+      ]
+    },
+    {
+      "id": "P05",
+      "title": "Instant simulations and history",
+      "category": "Statistics",
+      "status": "planned",
+      "sources": [
+        "js/stats.js",
+        "js/wheel-tab.js",
+        "docs/statistics.md"
+      ],
+      "acceptance": [
+        "Run 13\u201310,000 weighted selections instantly and show per-run results.",
+        "Aggregate duplicate labels; keep historical labels in the full denominator after option changes.",
+        "High-DPI charts respond to size/theme with counts, percent axes and theoretical markers.",
+        "Independently reset statistics; CSV escapes commas, quotes and newlines."
+      ],
+      "baselineTests": [
+        "test/stats.test.js"
+      ]
+    },
+    {
+      "id": "P06",
+      "title": "Standard dice",
+      "category": "Dice",
+      "status": "planned",
+      "sources": [
+        "js/dice.js",
+        "js/dice-tab.js",
+        "js/dice-animation.js",
+        "docs/dice-and-catan.md"
+      ],
+      "acceptance": [
+        "Roll one to ten d6 dice with positive or negative modifier.",
+        "Pips, predetermined top faces and result expression agree.",
+        "Felt table supports pointer and Enter/Space rolls; prevent overlapping roll commands.",
+        "Animate lift, three-axis tumble, rail/die collisions and non-overlapping scattered rest positions.",
+        "Persist distribution and support independent reset."
+      ],
+      "baselineTests": [
+        "test/dice.test.js",
+        "test/dice-controller.test.js"
+      ]
+    },
+    {
+      "id": "P07",
+      "title": "Catan setup and opening order",
+      "category": "Catan",
+      "status": "planned",
+      "sources": [
+        "js/dice.js",
+        "js/dice-tab.js",
+        "docs/dice-and-catan.md"
+      ],
+      "acceptance": [
+        "Configure two to six named players; suffix duplicate names.",
+        "Placement timer range 10\u2013600 seconds with 60-second default.",
+        "Optional loaded dice use two independent near-fair six-face profiles, fixed for the game and regenerated for new games.",
+        "Rank opening rolls descending, recursively reroll only tied players, exclude opening rolls from all statistics."
+      ],
+      "baselineTests": [
+        "test/dice.test.js",
+        "test/dice-controller.test.js"
+      ]
+    },
+    {
+      "id": "P08",
+      "title": "Placement and turn lifecycle",
+      "category": "Catan",
+      "status": "planned",
+      "sources": [
+        "js/dice.js",
+        "js/dice-tab.js"
+      ],
+      "acceptance": [
+        "Guide two settlement rounds in snake order; mandatory dialog shows actor and deadline.",
+        "Manual Done or elapsed-time deadline advances exactly once, including hidden-page recovery.",
+        "Roll two dice, announce robber sevens and advance active player exactly once.",
+        "Resume the full game after reload; after one hour since latest roll reset order/history while retaining players.",
+        "Older checkpoints derive expiration from latest log entry."
+      ],
+      "baselineTests": [
+        "test/dice.test.js",
+        "test/dice-controller.test.js"
+      ]
+    },
+    {
+      "id": "P09",
+      "title": "Catan analytics",
+      "category": "Catan",
+      "status": "planned",
+      "sources": [
+        "js/dice.js",
+        "js/stats.js",
+        "docs/dice-and-catan.md"
+      ],
+      "acceptance": [
+        "Show recent rolls, full persisted log, per-player sums, robber counts and averages.",
+        "After five gameplay rolls compare 2\u201312 observed sums to exact convolution of the active pair of fair or loaded dice profiles."
+      ],
+      "baselineTests": [
+        "test/dice.test.js",
+        "test/stats.test.js"
+      ]
+    },
+    {
+      "id": "P10",
+      "title": "Verse discovery",
+      "category": "Experience",
+      "status": "planned",
+      "sources": [
+        "js/verses.js",
+        "js/verse-modal.js",
+        "docs/experience.md"
+      ],
+      "acceptance": [
+        "Footer heart opens a random curated verse.",
+        "Fetch complete HelloAO translations grouped by language; persist selection.",
+        "Next verse works inside the same dialog; bundled English fallback works offline."
+      ],
+      "baselineTests": [
+        "test/verses.test.js"
+      ]
+    },
+    {
+      "id": "P11",
+      "title": "Accessible expressive interface",
+      "category": "Experience",
+      "status": "planned",
+      "sources": [
+        "js/theme.js",
+        "js/modal.js",
+        "js/tooltip.js",
+        "js/ui-controller.js",
+        "docs/experience.md"
+      ],
+      "acceptance": [
+        "OS theme plus persistent override; sound control remains available.",
+        "Text contrast 4.5:1 and focus indicators 3:1 in both themes; custom wheel labels choose readable contrast.",
+        "Dialogs trap focus, disable background and restore focus; Escape/backdrop close only dismissible dialogs.",
+        "Touch, keyboard, screen readers, reduced motion and narrow/landscape layouts retain complete tasks.",
+        "Use original wordmark and artwork with clear tooltips and live results."
+      ],
+      "baselineTests": [
+        "test/contrast.test.js",
+        "test/modal.test.js",
+        "test/haptics.test.js"
+      ]
+    },
+    {
+      "id": "P12",
+      "title": "Offline and saved preferences",
+      "category": "Platform",
+      "status": "planned",
+      "sources": [
+        "js/storage.js",
+        "sw.js",
+        "manifest.json",
+        "docs/deployment.md"
+      ],
+      "acceptance": [
+        "Installable app works after completed shell caching; updates must not mix asset versions.",
+        "Retain wheel settings/stats, selected tab, dice mode/stats, Catan checkpoint, translation, theme and sound.",
+        "Storage failures must be visible in the redesign without losing the in-memory task.",
+        "Local use requires no account; external verse access has an offline fallback."
+      ],
+      "baselineTests": [
+        "test/service-worker.test.js"
+      ]
+    }
+  ]
+}

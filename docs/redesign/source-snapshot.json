@@ -1,0 +1,189 @@
+{
+  "baselineCommit": "76f540473de7737badf6afb397b550b772578d96",
+  "files": [
+    {
+      "path": ".github/workflows/test.yml",
+      "sha256": "43d3fcbed14d6e8fa51c9f8449944f39b515f7d44a56b1cc8ccb0856c01c9cde"
+    },
+    {
+      "path": "README.md",
+      "sha256": "05effe10e1ae8ce49bba3e7289353e52940dc482914eeb08ba819342d2c21e8c"
+    },
+    {
+      "path": "css/styles.css",
+      "sha256": "14f3855c2621d3f01fa1be3fe83581aa0a3cb29410da9d542b699c4a75584019"
+    },
+    {
+      "path": "docs/deployment.md",
+      "sha256": "cfb5a90b3455ac18c2459966f101ca0cf681b4333e8c04c839387c8e59262ef4"
+    },
+    {
+      "path": "docs/development.md",
+      "sha256": "1eb25ebf9a06525db337e986dbcb53869e91a2298d2d0ed338cf18d3b1fff15f"
+    },
+    {
+      "path": "docs/dice-and-catan.md",
+      "sha256": "7169789f8557418c90353aaaee38b20d547bd3081af9352b01ad2d7f3ca84e28"
+    },
+    {
+      "path": "docs/experience.md",
+      "sha256": "0835fb686b2e81fd40cfca4d3fb1e6298da086bcd72fc16125faa5f42f1c809d"
+    },
+    {
+      "path": "docs/statistics.md",
+      "sha256": "11152e68d39fc960c77a76fec97763b28551879e0b82925b93f01c6e3ea491a6"
+    },
+    {
+      "path": "docs/wheel.md",
+      "sha256": "326664ca9d45e9a3331b83b5e446fc61c4db9040f25b317938979db832eeb675"
+    },
+    {
+      "path": "index.html",
+      "sha256": "aebf8f48f8f0e60849bf9a69b8cea1739904ea6522791adc22479851baae82b7"
+    },
+    {
+      "path": "js/app.js",
+      "sha256": "cc9e7740823a30304a3b839ebcb5e9f6a3db32d289ba73bda6d21c4b12acd1e9"
+    },
+    {
+      "path": "js/audio.js",
+      "sha256": "a9932ce664dc3b727bde20aefce1e77159272285ec0a0e3182ed2d34bd81a66b"
+    },
+    {
+      "path": "js/celebration.js",
+      "sha256": "e342eb6910a4b9a168a844ee6c37d8c451d4ef13c389d5f108990143752e2e33"
+    },
+    {
+      "path": "js/dice-animation.js",
+      "sha256": "b0935d01ba323a737ed7636e0c5bb857bc1c634a16e07cb643a6e2632d1a51b3"
+    },
+    {
+      "path": "js/dice-tab.js",
+      "sha256": "fbb1d4e7b610da34055c75669e87cc23c3782e6edb60a8351f834acb68fb992a"
+    },
+    {
+      "path": "js/dice.js",
+      "sha256": "c4942b0c5b711b32997fda98f92a9cbabc6e1167306f4b756c6a55cbf0a36aff"
+    },
+    {
+      "path": "js/haptics.js",
+      "sha256": "1176c7dabd92157e7a3bcde00cd1d028495efb4553f57dc87fbc80199fc0282e"
+    },
+    {
+      "path": "js/modal.js",
+      "sha256": "07bd70436abf97471da26c9ac517e431d75be605ea7cea52615fdd27d6b7fd11"
+    },
+    {
+      "path": "js/random.js",
+      "sha256": "9ef859d92fc7f870134112d68a21f22ff9ae83cde27bb1051aa88602e4e83e2b"
+    },
+    {
+      "path": "js/stats.js",
+      "sha256": "2650a4e6cf5e5bb46b544fd021131e53ee0c241bdcbd113857e0cc6447480755"
+    },
+    {
+      "path": "js/storage.js",
+      "sha256": "ab99914ee5e8e1692380d81a40f81d40e9db83bf20ad2eab247ace9ee87a27a7"
+    },
+    {
+      "path": "js/theme.js",
+      "sha256": "390216647b868dbb3cdab6b99f055e174fed94b45978185c94bce328b3bdb705"
+    },
+    {
+      "path": "js/tooltip.js",
+      "sha256": "5a7b5668a18b9c08a6e69fe241c8b8048d276ca1998fb6a704ecbf839405b9dd"
+    },
+    {
+      "path": "js/ui-controller.js",
+      "sha256": "655bd58b4491ed82f126e537318efc21aedb1790f402ba82202b4d8281a855cd"
+    },
+    {
+      "path": "js/verse-modal.js",
+      "sha256": "91239db23260d512e666f7a1856c8ad823661460550b100c9cd5f02b1c9ee1cd"
+    },
+    {
+      "path": "js/verses.js",
+      "sha256": "a7ee0dbd93db254803ce6fbaf006c060777f4616e753c0baecabf328adec4d41"
+    },
+    {
+      "path": "js/wheel-batch.js",
+      "sha256": "b93c1ae75062c43e67ac542c2ebf4c067ca2a7be86f5274232577b42281c7af6"
+    },
+    {
+      "path": "js/wheel-tab.js",
+      "sha256": "694af9fa2f37d6dced8bf6f259563417cbebfa6383d897ac59cff9eb35fdb505"
+    },
+    {
+      "path": "js/wheel.js",
+      "sha256": "015799a47b9a2d791e52510b38458dd4cee068036d6ffc1b9f9a96a1fe93f4e4"
+    },
+    {
+      "path": "manifest.json",
+      "sha256": "cdeabdbbeeb4d88e9b883ecf866f2937e94ec8bd495297fc87568321392f8e0c"
+    },
+    {
+      "path": "package.json",
+      "sha256": "4b2f1be3c8b2f73afa951713ce58262473cfab16746a0a30ab89803611692bb4"
+    },
+    {
+      "path": "sw.js",
+      "sha256": "db0aef2113b2a844b30b7a825075bd67020fe2c199c949057032bfb76673c1d1"
+    },
+    {
+      "path": "test/audio.test.js",
+      "sha256": "3b896aac37e66badbfdbca4597ab9193cd4fa712ab33a3f13d3728c50d7f8e49"
+    },
+    {
+      "path": "test/contrast.test.js",
+      "sha256": "95a741b2dc8cbf23da0cb225cb1df5f6bea881ea9f31e59a8bdec89122616738"
+    },
+    {
+      "path": "test/dice-controller.test.js",
+      "sha256": "7cc15c5669d0f810e1432246ae93d68945156fc521f9e7762132e792db033b18"
+    },
+    {
+      "path": "test/dice.test.js",
+      "sha256": "23ddde6b895aa38190cf6db62cc4c99264d5608f7d4569cfc4dc3936882f4a00"
+    },
+    {
+      "path": "test/haptics.test.js",
+      "sha256": "74a579c32e5f871b767364eb5b131c4f28b01d08b5db496fd4312f4dc8b64d28"
+    },
+    {
+      "path": "test/modal.test.js",
+      "sha256": "860d05fece2a4df0d4fbe0f763c32b98e8d6b7f833a5c7fcc6e5b50da6acd803"
+    },
+    {
+      "path": "test/random.test.js",
+      "sha256": "6168041ad4f3f4a837e2cc375a6cc1612fc9be79469b30bfd2debeaaaed0820f"
+    },
+    {
+      "path": "test/service-worker.test.js",
+      "sha256": "50d241418a3fbc441601bd8a367a4d168fbe53c536faa22bfb275f3bddd03ac2"
+    },
+    {
+      "path": "test/stats.test.js",
+      "sha256": "2a490d4e99ca07f62df25f6c3e2aad12cb40b59a80c6e4c3abf8146f1d97b107"
+    },
+    {
+      "path": "test/verses.test.js",
+      "sha256": "610d5a26db5fb8bfba79912ca2a5c953a9cbfe91ebac8e837f310947045f58d4"
+    },
+    {
+      "path": "test/wheel-animation.test.js",
+      "sha256": "a4971d7a62d44a745ab8724eeb97d49f759fef55b1c8601f54b7ffac194822ce"
+    },
+    {
+      "path": "test/wheel-controller.test.js",
+      "sha256": "3db194790280dcd3f93262e391ebf133721fa9b64a004117f4eba301f0f6bfa0"
+    },
+    {
+      "path": "test/wheel-rendering.test.js",
+      "sha256": "48811cadff6e3edfb3b6a019d81ccb256b7e9330a14bdab12d0d6cba1b90f65f"
+    },
+    {
+      "path": "test/wheel.test.js",
+      "sha256": "4dddc09228a195e807393e5a952d9f11a3ba90cc30ad7186b628f945fa56e272"
+    }
+  ]
+}

@@ -62,3 +62,7 @@ docs/                            documentation and screenshots
 ## 📄 License
 
 [MIT](LICENSE) © 2026 Venkatesh Gunda. Third-party code, assets and content remain subject to their own licenses.
+
+## 🧭 Redesign
+
+The framework redesign is being developed on `codex/redesign-foundation`. See the [requirements, architecture and runnable foundation](docs/redesign/README.md) for scope, local preview and feature-parity tracking.

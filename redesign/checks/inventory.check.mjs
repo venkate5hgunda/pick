@@ -15,12 +15,21 @@ test('every feature has unique identity, existing evidence and explicit acceptan
     manifest.requirements.length,
   );
   for (const entry of manifest.requirements) {
-    assert.equal(entry.status, 'planned');
+    assert.ok(
+      ['planned', 'implemented', 'verified'].includes(entry.status),
+      `${entry.id}: unknown status ${entry.status}`,
+    );
     assert.ok(entry.acceptance.length);
     assert.ok(entry.sources.length);
     for (const p of [...entry.sources, ...entry.baselineTests])
       assert.ok(existsSync(resolve(root, p)), `${entry.id}: ${p}`);
   }
+  assert.deepEqual(
+    manifest.requirements
+      .filter((entry) => entry.status === 'implemented')
+      .map((entry) => entry.id),
+    ['P01', 'P02'],
+  );
 });
 test('frozen source inventory is anchored to the actual baseline commit', () => {
   assert.equal(manifest.baselineCommit, snapshot.baselineCommit);

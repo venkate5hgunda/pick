@@ -1,9 +1,14 @@
 :root {
   --paper: #fff9ed;
   --surface: #fffefb;
-  --ink: #302820;
-  --muted: #66584b;
-  --accent: #b63d18;
-  --soft: #ffe8cc;
-  --line: #e8dac8;
+  --ink: #2c241d;
+  --muted: #6d5d4f;
+  --accent: #c63f2b;
+  --accent-dark: #a92f1d;
+  --soft: #ffebd2;
+  --line: #eadbc8;
+  --line-strong: #cdbca8;
+  --focus: #146b60;
+  --mint-soft: #dff3ed;
+  --mint-dark: #176b5f;
 }

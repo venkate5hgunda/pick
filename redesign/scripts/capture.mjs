@@ -31,13 +31,23 @@ try {
         reducedMotion: 'reduce',
       });
       await page.goto(`http://127.0.0.1:${port}`);
-      await page.locator('.card').first().waitFor();
+      await page.getByRole('heading', { name: 'Give it a spin.' }).waitFor();
+      await page.waitForFunction(() => {
+        const canvas = document.querySelector('canvas');
+        const context = canvas?.getContext('2d');
+        return (
+          canvas &&
+          context &&
+          context.getImageData(canvas.width / 2, canvas.height / 2, 1, 1)
+            .data[3] > 0
+        );
+      });
       await page.screenshot({ path: `../docs/images/redesign-${name}.png` });
     } finally {
       await browser.close();
     }
   }
-  console.log('Captured desktop and mobile foundation previews.');
+  console.log('Captured desktop and mobile wheel previews.');
 } finally {
   server.kill();
 }

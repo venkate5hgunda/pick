@@ -18,6 +18,8 @@
     "capture": "node scripts/capture.mjs"
   },
   "dependencies": {
+    "@iconify-icons/mdi": "2.0.0",
+    "@iconify/svelte": "5.2.3",
     "svelte": "5.57.2"
   },
   "devDependencies": {

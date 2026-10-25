@@ -1,37 +1,34 @@
 # Verification
 
-## Foundation acceptance
+## First-feature acceptance
 
-The milestone must pass type checking, production bundling, inventory/source integrity and real browser navigation/filter/detail/recovery checks. Tests inspect the production build and exercise desktop Chromium and mobile WebKit, including no horizontal overflow and reduced motion. Preview isolation checks assert no local/session storage, IndexedDB databases, service-worker registrations or external requests.
+The milestone must pass type checking, production bundling, inventory/source integrity and real browser wheel flows. Tests inspect the production build and exercise desktop Chromium and mobile WebKit, including no horizontal overflow and reduced motion. Isolation checks permit only the namespaced redesign wheel record and assert no external requests.
 
-The inventory test hashes the actual baseline Git objects, verifies every cited source/test exists, and checks local documentation links. CI fetches complete history so baseline objects are available. The game/exercise catalog coverage check prevents accidentally omitting a known entry. Screenshots are generated from the built preview.
+The inventory test hashes the actual baseline Git objects, verifies every cited source/test exists, and checks local documentation links. Screenshots are generated from the built preview.
 
 ## Execution evidence
 
-Verified on 2026-10-24 against the source baseline recorded in [the inventory](parity.json):
+Verified on 2026-10-25 against the source baseline recorded in [the inventory](parity.json):
 
 | Check | Result |
 | --- | --- |
-| Foundation type check and production build | Passed |
-| Foundation inventory / source-hash / documentation checks | 3/3 passed |
-| Desktop Chromium + mobile WebKit browser checks | 10/10 passed |
-| Automated WCAG A/AA checks on catalog and detail routes | No violations in tested pages |
-| Root JavaScript baseline suite | 84/84 passed |
+| Redesign type check and production build | Passed |
+| Inventory / source-hash / documentation checks | 3/3 passed |
+| Desktop Chromium + mobile WebKit browser checks | 12/12 passed |
+| Automated WCAG A/AA checks on wheel, dialog, roadmap and detail routes | No violations in tested pages |
+| Root JavaScript baseline suite | 84/84 passed at the foundation baseline; rerun before parity sign-off |
 | Desktop and mobile captures | Generated from production build and visually inspected |
 
-Browser coverage traverses every requirement route, filters and searches the live inventory, verifies detail criteria, reload/deep-link behavior, Back navigation, empty search, unknown-route recovery, keyboard input, reduced-motion operation, horizontal overflow and absence of storage/worker/external-request side effects. It is foundation evidence, not evidence that migrated gameplay is complete.
+Browser coverage edits and restores options, validates integer weight drafts, changes visual repeats, exercises presets and custom-state recovery, spins through the real result dialog, checks keyboard use and reduced motion, verifies responsive canvas geometry, traverses the roadmap, and asserts no external requests. This is implementation evidence for P01/P02, not complete parity sign-off.
 
 Commands: `npm --prefix redesign run build`, `npm --prefix redesign test`, `npm --prefix redesign run check:format`, `npm --prefix redesign run test:browser`, `npm --prefix redesign run capture`. Browser tests use the built preview; baseline JavaScript tests use the existing root runner. Dependencies are exact-pinned with package-local locks.
 
 ## Trace findings and fixes
 
-The trace covered source registries and UI entry points, domain transitions, data keys/checkpoints, lifecycle cleanup, multiplayer/private views or reminder/push authority, PWA assets, existing regressions, current remote decisions, new package dependencies, documentation references and CI/test discovery.
+The trace covered the original wheel entry points, presets, option identity, input-set expansion, weight validation, cryptographic selection, animation/result ownership, persistence boundaries, canvas resizing, responsive layout, roadmap consumers, documentation, capture script and browser checks.
 
-A missed trace of Node's automatic root test discovery initially let it execute nested Playwright specs with the wrong runner. The new package now keeps checks under `redesign/checks/` and invokes inventory checks explicitly; original root test discovery passes independently. The browser pipeline also caught persistent empty-search state on Pick's recovery route; home navigation clears transient filters. These corrections were verified before committing.
-
-The React production build reports dependency-level `use client` directive warnings from React Router; these directives do not control this entirely client-rendered application. Builds and both browser engines pass. Svelte's checker currently supports TypeScript 5/6, so Pick pins 6.0.3; the React packages pin 7.0.2. Dependency resolution was verified without force or legacy-peer overrides.
-
+The browser trace caught three issues before sign-off: ambiguous option-row test selectors, a mobile-only hidden count assertion, and insufficient text contrast on the coral action color. The implementation now uses exact semantic selectors, asserts mobile-visible outcomes, and uses an AA-passing darker coral. The capture trace then exposed a blank first-frame WebKit canvas: the renderer now performs an initial layout measurement in addition to observing resizes, and both the browser suite and capture script require a painted canvas pixel. This was a missed lifecycle-to-capture trace, corrected before handoff. The capture script also still waited for the retired catalog home; tracing its consumer surfaced and corrected that stale assumption.
 
 ## Remaining release work
 
-All parity entries are planned. No legacy gameplay flow, saved-data migration, offline installation, production push subscription, multiplayer recovery or real-model qualification has been implemented or requalified by this foundation. Existing tests are baseline evidence and remain required during later implementation. Full game/practice flows, keyboard/screen-reader behavior, light/dark palettes and physical device sound/haptics/push need feature-specific sign-off.
+P01 and P02 are implemented but not yet parity-verified. Sound/ticks and ambient motion (P03), statistics, dice/Catan, verse discovery, legacy saved-data migration, offline installation and full platform recovery remain planned. The theme control is a functional preview, not yet the OS-aware persistent preference required by P11. Physical-device sound, haptics and screen-reader sign-off remain release work.

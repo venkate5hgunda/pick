@@ -6,8 +6,8 @@ The inventory has **12 feature groups**. Groups contain multiple acceptance case
 
 | ID | Feature | Area | Redesign status |
 | --- | --- | --- | --- |
-| [P01](#p01) | Decision wheel | Wheel | Planned |
-| [P02](#p02) | Weighted selection | Wheel | Planned |
+| [P01](#p01) | Decision wheel | Wheel | Implemented |
+| [P02](#p02) | Weighted selection | Wheel | Implemented |
 | [P03](#p03) | Spin, sound and motion | Wheel | Planned |
 | [P04](#p04) | Animated batches | Statistics | Planned |
 | [P05](#p05) | Instant simulations and history | Statistics | Planned |
@@ -25,12 +25,12 @@ The inventory has **12 feature groups**. Groups contain multiple acceptance case
 - Preserve bright original artwork, legible contrast, touch and keyboard operation, focus management, reduced motion, and mobile/landscape/desktop layouts. Primary action and active actor remain apparent.
 - Treat installation, first-load caching, fully offline operation, interrupted updates and multi-tab version consistency as separate cases.
 - Keep behavior, domain state, persistent data and presentation independently testable; one authoritative owner for each state transition.
-- A planned or merely implemented feature is not verified parity. Track pending, implemented and verified evidence separately when migration begins. Foundation status is intentionally all planned.
+- A planned or merely implemented feature is not verified parity. Implemented means the redesign flow exists and has targeted browser evidence; verified remains reserved for complete parity sign-off.
 - A backend replacement must specify user-visible availability, consent, data retention, authority and recovery semantics before activation. Architectural freedom does not erase these requirements.
 
 ## P01
 
-**Decision wheel** · Wheel · Planned
+**Decision wheel** · Wheel · Implemented
 
 - Fresh Yes/No wheel repeats five input sets, ten visible slices.
 - Edit labels and colors; add/remove options; repeat one to five input sets without changing semantic odds.
@@ -42,7 +42,7 @@ Baseline tests: [test/wheel.test.js](../../test/wheel.test.js), [test/wheel-cont
 
 ## P02
 
-**Weighted selection** · Wheel · Planned
+**Weighted selection** · Wheel · Implemented
 
 - Equal odds by default; optional integer weights persist.
 - Mobile weight drafts remain editable; invalid blurred values revert to one.

@@ -2,7 +2,7 @@
 
 A new implementation of the existing product, grounded in its complete observable behavior.
 
-**Milestone 1: requirements, architecture and runnable foundations.** No migrated gameplay is claimed. The original application remains the behavior reference. The foundation is a working, responsive feature explorer with navigation, category filters, search, acceptance details and explicit planned status.
+**Milestone 2 in progress: first complete feature.** The redesign now opens on a responsive, interactive decision wheel with editable options, presets, visual repeats, optional integer weights, local save/resume and an accessible result dialog. The original application remains the behavior reference; the roadmap keeps the remaining feature groups explicit.
 
 | Document | Purpose |
 | --- | --- |
@@ -15,7 +15,7 @@ A new implementation of the existing product, grounded in its complete observabl
 
 Baseline: [`76f540473de7`](https://github.com/venkate5hgunda/pick/commit/76f540473de7737badf6afb397b550b772578d96) from refreshed `origin/main`. Branch: `codex/redesign-foundation`. Stack: **Svelte + TypeScript + Vite**. Baseline evidence means inspected source and existing regression tests; it does not claim every existing game flow was manually revalidated during this milestone.
 
-## Run the foundation
+## Run the redesign
 
 From the repository root, use Node 22.12+ (or a newer Vite-supported LTS):
 
@@ -42,4 +42,4 @@ Browser tests run the production build with Chromium desktop and WebKit mobile. 
 
 ![Mobile foundation](../images/redesign-mobile.png)
 
-The preview uses no production storage, service worker, account, notification subscription or remote API. The artwork is original CSS geometry and all resources are local. It is an architectural starting point, not a replacement release.
+The preview uses an isolated `pick:redesign:wheel-v1` local record and does not register a production service worker, account, notification subscription or remote API. The wheel is rendered locally at device resolution; icons ship in the bundle. P01 and P02 are implemented, not yet full parity-verified. The remaining groups stay planned and this is not a replacement release.

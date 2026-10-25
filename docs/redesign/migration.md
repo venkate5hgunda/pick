@@ -37,3 +37,5 @@ Use a separate preview origin during later implementation. Before replacing the 
 ## Trace checklist for every migrated feature
 
 Trace UI entry points → controller/actions → domain rules → persistence/transport → projections/rendering → serialized output → docs and tests. Include every consumer of changed roles, phases, flags, IDs and fields. Revisit the original decision when changing its premise. Record newly discovered requirements and additional edits; identify missed traces explicitly if they cause a defect.
+
+Current progress: the typed wheel domain, editor, weighted selection, visual repeats, local redesign record, responsive canvas and result dialog are implemented. Sound/ticks, ambient motion, statistics and legacy-key migration remain later gates, so P03 and P12 remain planned.

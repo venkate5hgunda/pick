@@ -16,7 +16,8 @@ User input → route/view → feature controller → domain transition
                            persistence / transport
 ```
 
-- `redesign/src/App.svelte` owns the current foundation shell and route composition.
+- `redesign/src/App.svelte` owns the shell, wheel controller composition and route composition.
+- `redesign/src/domain/wheel.ts` owns presets, option expansion, weight validation and cryptographic selection. `redesign/src/features/wheel/WheelCanvas.svelte` owns high-DPI rendering only; it never chooses outcomes.
 - `redesign/src/lib/catalog.ts` adapts the durable parity inventory for the explorer. Production logic is not imported into this preview.
 - `redesign/src/styles.css` owns shared layout; `theme.css` owns this product's tokens. Avoid scattered override stylesheets.
 - Add `src/features/<feature>/` for cohesive view/controller code when that feature is implemented, `src/domain/` for pure rules, `src/platform/` for browser persistence/audio/timers/network, and `src/components/` for genuinely shared controls. Do not create empty abstraction layers in advance.
@@ -40,7 +41,7 @@ Separate fair/weighted selection, statistics and Catan phase transitions from Ca
 
 ## Delivery, PWA and security
 
-The foundation serves on loopback on a dedicated port, imports only its own code and the public parity JSON, and never registers a service worker. Vite's filesystem allowlist is restricted to the package and `docs/redesign/`. Build output is not deployed by existing production workflows. A new branch-scoped workflow builds and browser-tests the foundation with read-only permissions.
+The redesign serves on loopback on a dedicated port, imports only its own code and the public parity JSON, and never registers a service worker. The first wheel slice persists only `pick:redesign:wheel-v1`, keeping it separate from the original schema until the explicit migration phase. Vite's filesystem allowlist is restricted to the package and `docs/redesign/`. Build output is not deployed by existing production workflows.
 
 Before product rollout, introduce a dedicated manifest, asset graph and scope-owned service worker, then test install/update/offline behavior. Avoid CDN runtime dependencies. Static hosting must include the correct repository base path and all lazy feature assets. Use a separate preview origin for any later migration experiments so production storage and workers cannot be modified accidentally.
 

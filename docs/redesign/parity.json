@@ -2,13 +2,13 @@
   "schemaVersion": 1,
   "app": "Pick",
   "baselineCommit": "76f540473de7737badf6afb397b550b772578d96",
-  "milestone": "foundation",
+  "milestone": "first-complete-feature",
   "requirements": [
     {
       "id": "P01",
       "title": "Decision wheel",
       "category": "Wheel",
-      "status": "planned",
+      "status": "implemented",
       "sources": [
         "js/wheel-tab.js",
         "js/wheel.js",
@@ -28,7 +28,7 @@
       "id": "P02",
       "title": "Weighted selection",
       "category": "Wheel",
-      "status": "planned",
+      "status": "implemented",
       "sources": [
         "js/random.js",
         "js/wheel.js",

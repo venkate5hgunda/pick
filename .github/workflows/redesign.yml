@@ -1,7 +1,7 @@
 name: Redesign foundation
 on:
   push:
-    branches: [codex/redesign-foundation]
+    branches: [main, codex/redesign-foundation, codex/redesign-p03-motion]
   pull_request:
     paths: ['redesign/**', 'docs/redesign/**', 'docs/images/redesign-*', '.github/workflows/redesign.yml']
   workflow_dispatch:
@@ -33,6 +33,8 @@ jobs:
       - run: npm run check:format
       - run: npm test
       - run: npm run build
+      - name: Verify published preview matches the build
+        run: diff -r preview node_modules/.cache/redesign-dist
       - run: npx playwright install --with-deps chromium webkit
       - run: npm run test:browser
       - uses: actions/upload-artifact@v4

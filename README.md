@@ -5,12 +5,22 @@
 **Can't decide? Spin it.** A fluid yes/no wheel, a batch simulator, 3D dice and a Catan companion — all in your browser.
 
 [![Live app](https://img.shields.io/badge/▶_Open_the_app-ff5a52?style=for-the-badge)](https://venkate5hgunda.github.io/pick/)
-![No build step](https://img.shields.io/badge/build-none-2ea44f?style=for-the-badge)
+[![Redesign preview](https://img.shields.io/badge/▶_Redesign_preview-c63f2b?style=for-the-badge)](https://venkate5hgunda.github.io/pick/redesign/preview/)
 ![License: MIT](https://img.shields.io/badge/license-MIT-f5a00b?style=for-the-badge)
 
-<img src="docs/images/spin.gif" alt="The Pick wheel spinning and landing on a result" width="640">
+<img src="docs/images/redesign-desktop.png" alt="Pick redesign showing the decision wheel and options on desktop" width="800">
 
 </div>
+
+## 🎨 Redesign preview
+
+Explore the [new wheel interface](https://venkate5hgunda.github.io/pick/redesign/preview/), with a warm palette, responsive layout, editable options, presets, visual repeats, optional weights and a result dialog. Choices are saved locally in the browser.
+
+The redesign is a work in progress: dice, Catan, batch statistics and other features remain available in the [original app](https://venkate5hgunda.github.io/pick/). See the [redesign documentation](docs/redesign/README.md) for scope and parity tracking.
+
+<p align="center">
+  <img src="docs/images/redesign-mobile.png" alt="Pick redesign on a phone, with the wheel and option editor" width="350">
+</p>
 
 ## ✨ Highlights
 
@@ -35,6 +45,8 @@ python3 -m http.server 8080   # serve over HTTP (ES modules don't load from file
 npm test                      # unit tests, Node's built-in runner
 ```
 
+To work on the redesign, run `npm --prefix redesign ci` and `npm --prefix redesign run dev`. See [deployment](docs/deployment.md) for updating its published preview.
+
 ## 📚 Documentation
 
 | Topic | Page |
@@ -57,12 +69,9 @@ npm test                      # unit tests, Node's built-in runner
 index.html, css/, js/, assets/   the app (static, no build)
 test/                            unit tests
 docs/                            documentation and screenshots
+redesign/                        Svelte redesign and published preview
 ```
 
 ## 📄 License
 
 [MIT](LICENSE) © 2026 Venkatesh Gunda. Third-party code, assets and content remain subject to their own licenses.
-
-## 🧭 Redesign
-
-The framework redesign is being developed on `codex/redesign-foundation`. See the [requirements, architecture and runnable foundation](docs/redesign/README.md) for scope, local preview and feature-parity tracking.
